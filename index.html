@@ -1,3 +1,8 @@
+To ensure the **Guided Discovery** section remains a visual asset without an active link, I have removed the `<a>` tag and replaced it with a `<div>`. This maintains the exact styling and minimalist aesthetic while disabling clickability.
+
+The rest of the file remains untouched to preserve your existing content and structure.
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -77,7 +82,7 @@
                 </div>
             </div>
             <div class="lg:col-span-8 space-y-8">
-                <a href="index_discovery_asset.jpg" target="_blank" class="block bg-white border border-gray-100 rounded-[2.5rem] p-8 shadow-inner hover:opacity-95 transition-opacity overflow-hidden">
+                <div class="block bg-white border border-gray-100 rounded-[2.5rem] p-8 shadow-inner overflow-hidden">
                     <div class="flex flex-col md:flex-row items-center justify-between gap-4 relative">
                         <div class="flex flex-col gap-3 w-full md:w-1/3">
                             <div class="p-3 bg-gray-50 border border-gray-200 rounded-xl flex items-center gap-3">
@@ -103,7 +108,7 @@
                             </div>
                         </div>
                     </div>
-                </a>
+                </div>
                 <p class="text-gray-600 text-sm leading-relaxed italic font-medium">I bridge the gap between black-box algorithms and human intent. By architecting faceted experiences and intelligent metadata layers, I reduce Time-to-Insight for operators and prove Discovery ROI through data-driven precision.</p>
             </div>
         </section>
@@ -287,3 +292,4 @@
     </script>
 </body>
 </html>
+```
