@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENEA - Archivio Storico Richieste - Mockup UI</title>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Titillium Web', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        .app-header {
+            background: linear-gradient(135deg, #1c4e80 0%, #0d3a5f 100%);
+            color: white;
+            padding: 20px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        .content-wrapper { background: white; }
+        
+        .stats-bar {
+            padding: 20px 30px;
+            background: white;
+            border-bottom: 2px solid #e0e0e0;
+            display: flex;
+            gap: 35px;
+            align-items: center;
+        }
+        
+        .stat-item { text-align: center; }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1;
+        }
+        
+        .stat-label {
+            font-size: 10px;
+            color: #666;
+            text-transform: uppercase;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+        
+        .stat-annullate .stat-number { color: #6c757d; }
+        .stat-approvate .stat-number { color: #28a745; }
+        .stat-rifiutate .stat-number { color: #dc3545; }
+        .stat-gestite .stat-number { color: #17a2b8; }
+        .stat-cancellate .stat-number { color: #c82333; }
+        
+        .total-stat {
+            margin-left: auto;
+            padding-left: 35px;
+            border-left: 2px solid #e0e0e0;
+        }
+        
+        .total-stat .stat-number {
+            font-size: 38px;
+            color: #0066CC;
+        }
+        
+        .filter-bar {
+            background: #e8f4f8;
+            border-bottom: 2px solid #b8dae8;
+            padding: 15px 30px;
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .filter-group label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #555;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        
+        .filter-group select,
+        .filter-group input {
+            padding: 7px 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 13px;
+            background: white;
+        }
+        
+        .filter-group select { min-width: 200px; }
+        
+        .search-box { margin-left: auto; }
+        
+        .search-box input {
+            padding: 7px 12px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            min-width: 250px;
+            font-size: 13px;
+        }
+        
+        .requests-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        
+        .requests-table thead {
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        .requests-table thead th {
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 700;
+            color: #333;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-right: 1px solid #e0e0e0;
+        }
+        
+        .requests-table thead th:last-child { border-right: none; }
+        
+        .requests-table tbody tr {
+            border-bottom: 1px solid #e8e8e8;
+            cursor: pointer;
+            transition: background-color 0.12s;
+        }
+        
+        .requests-table tbody tr:hover { background-color: #f8f9fa; }
+        
+        .requests-table tbody td {
+            padding: 14px 15px;
+            vertical-align: middle;
+            border-right: 1px solid #f5f5f5;
+            color: #333;
+        }
+        
+        .requests-table tbody td:last-child { border-right: none; }
+        
+        .stato-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 700;
+            text-align: center;
+            min-width: 140px;
+            letter-spacing: 0.3px;
+        }
+        
+        .stato-annullata {
+            background-color: #e2e3e5;
+            color: #383d41;
+            border: 1px solid #d6d8db;
+        }
+        
+        .stato-approvata {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .stato-rifiutata {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .stato-gestita {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .stato-cancellata {
+            background-color: #f5c6cb;
+            color: #721c24;
+            border: 1px solid #dc3545;
+        }
+        
+        .expand-icon {
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 7px solid #666;
+            margin-right: 8px;
+            transition: transform 0.2s;
+            vertical-align: middle;
+        }
+        
+        .expand-icon.expanded { transform: rotate(180deg); }
+        
+        .expanded-row { display: none; }
+        .expanded-row.show { display: table-row; }
+        
+        .expanded-content {
+            padding: 25px 30px;
+            background: #fafafa;
+            border-top: 3px solid #0066CC;
+        }
+        
+        .archived-alert {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-left: 4px solid #ffc107;
+            border-radius: 4px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+        
+        .deleted-alert {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-left: 4px solid #dc3545;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .detail-item {
+            background: white;
+            padding: 12px 15px;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+            border-left: 3px solid #0066CC;
+        }
+        
+        .detail-item label {
+            display: block;
+            font-size: 10px;
+            color: #666;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+        
+        .detail-item .value {
+            font-size: 13px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .pagination-wrapper {
+            padding: 18px 30px;
+            border-top: 1px solid #e0e0e0;
+            background: #fafafa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .pagination {
+            display: flex;
+            gap: 4px;
+            list-style: none;
+        }
+        
+        .pagination li {
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        
+        .pagination li a {
+            display: block;
+            padding: 6px 12px;
+            text-decoration: none;
+            color: #333;
+            font-size: 13px;
+        }
+        
+        .pagination li.active {
+            background: #0066CC;
+            border-color: #0066CC;
+        }
+        
+        .pagination li.active a { color: white; }
+        
+        .mockup-section {
+            margin: 40px 20px;
+            padding: 25px;
+            background: #fffbf0;
+            border: 2px dashed #ffcc00;
+            border-radius: 8px;
+        }
+        
+        .mockup-section h4 {
+            color: #856404;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .example-box {
+            background: white;
+            padding: 20px;
+            border-radius: 6px;
+            border: 2px solid #ddd;
+            margin-top: 15px;
+        }
+        
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 9px 18px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .btn-delete:hover { background: #c82333; }
+        
+        .btn-archive {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 9px 18px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #666;
+            border: 1px solid #ccc;
+            padding: 9px 18px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-header">
+        📦 ARCHIVIO STORICO RICHIESTE SUPPORTO LOGISTICO - ENEA
+    </div>
+
+    <div class="content-wrapper">
+        
+        <!-- STATISTICHE - 5 STATI -->
+        <div class="stats-bar">
+            <div class="stat-item stat-annullate">
+                <div class="stat-number">56</div>
+                <div class="stat-label">Annullate</div>
+            </div>
+            <div class="stat-item stat-approvate">
+                <div class="stat-number">89</div>
+                <div class="stat-label">Approvate<br>(completate)</div>
+            </div>
+            <div class="stat-item stat-rifiutate">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Non Fattibili<br>(completate)</div>
+            </div>
+            <div class="stat-item stat-gestite">
+                <div class="stat-number">67</div>
+                <div class="stat-label">Gestite Reparto<br>(completate)</div>
+            </div>
+            <div class="stat-item stat-cancellate">
+                <div class="stat-number">15</div>
+                <div class="stat-label">Cancellate<br>(admin)</div>
+            </div>
+            <div class="total-stat">
+                <div class="stat-number">239</div>
+                <div class="stat-label">Totale Archiviate</div>
+            </div>
+        </div>
+
+        <!-- FILTRI CON CANCELLATA -->
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label>Stato Finale</label>
+                <select>
+                    <option value="">Tutti gli stati</option>
+                    <option value="annullata">Annullata</option>
+                    <option value="approvata">Approvata (completata)</option>
+                    <option value="rifiutata">Non fattibile (completata)</option>
+                    <option value="gestita">Gestita reparto (completata)</option>
+                    <option value="cancellata">Cancellata (admin)</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>Data Creazione Da</label>
+                <input type="date" value="2025-01-01">
+            </div>
+            
+            <div class="filter-group">
+                <label>Data Creazione A</label>
+                <input type="date" value="2026-01-20">
+            </div>
+            
+            <div class="filter-group">
+                <label>Data Archiviazione Da</label>
+                <input type="date">
+            </div>
+            
+            <div class="filter-group">
+                <label>Reparto</label>
+                <select>
+                    <option value="">Tutti i reparti</option>
+                    <option value="sgd">SGD</option>
+                    <option value="smd">SMD</option>
+                </select>
+            </div>
+            
+            <div class="filter-group search-box">
+                <label>Cerca:</label>
+                <input type="text" placeholder="Destinazione, richiedente...">
+            </div>
+        </div>
+
+        <!-- TABELLA -->
+        <table class="requests-table">
+            <thead>
+                <tr>
+                    <th style="width: 60px;">ID</th>
+                    <th style="width: 170px;">STATO FINALE ▼</th>
+                    <th style="width: 180px;">PROPRIETARIO RICHIESTA</th>
+                    <th style="width: 90px; text-align: center;">PASS.</th>
+                    <th>DESTINAZIONE</th>
+                    <th style="width: 140px;">DATA TRASPORTO</th>
+                    <th style="width: 120px;">DATA CONCLUSA</th>
+                    <th style="width: 120px;">ARCHIVIATA IL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- CANCELLATA - Esempio prioritario -->
+                <tr onclick="toggleRow('detail-157')" style="background: #fff5f5;">
+                    <td>
+                        <span class="expand-icon" id="icon-157"></span>
+                        <strong>157</strong>
+                    </td>
+                    <td>
+                        <span class="stato-badge stato-cancellata">CANCELLATA</span>
+                    </td>
+                    <td>Test Utente</td>
+                    <td style="text-align: center;">1</td>
+                    <td>Test Destinazione</td>
+                    <td>30/01/2026 10:00</td>
+                    <td style="color: #666;">18/01/2026</td>
+                    <td style="color: #999; font-size: 12px;">18/01/2026</td>
+                </tr>
+                <tr class="expanded-row" id="detail-157">
+                    <td colspan="8">
+                        <div class="expanded-content">
+                            <div class="deleted-alert">
+                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                                    <span style="font-size: 20px;">🗑️</span>
+                                    <strong style="font-size: 15px;">Richiesta cancellata manualmente</strong>
+                                </div>
+                                <div style="font-size: 13px; line-height: 1.6;">
+                                    <strong>Cancellata da:</strong> Remadife (Amm. Sistema)<br>
+                                    <strong>Data cancellazione:</strong> 18/01/2026 alle 15:30<br>
+                                    <strong>Motivazione:</strong> "Richiesta di test creata durante formazione utenti - non valida per operatività reale. Rimossa per pulizia sistema."
+                                </div>
+                            </div>
+                            
+                            <div class="archived-alert">
+                                <span><strong>Archiviata automaticamente</strong> al momento della cancellazione - Dati in sola lettura</span>
+                            </div>
+                            
+                            <div class="detail-grid">
+                                <div class="detail-item">
+                                    <label>Luogo Partenza</label>
+                                    <div class="value">Test Partenza</div>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Destinazione</label>
+                                    <div class="value">Test Destinazione</div>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Motivazione</label>
+                                    <div class="value">Test richiesta formazione</div>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Stato Pre-Cancellazione</label>
+                                    <div class="value" style="color: #ffc107;">Bozza (mai inviata)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- ANNULLATA -->
+                <tr onclick="toggleRow('detail-129')">
+                    <td>
+                        <span class="expand-icon" id="icon-129"></span>
+                        <strong>129</strong>
+                    </td>
+                    <td>
+                        <span class="stato-badge stato-annullata">ANNULLATA</span>
+                    </td>
+                    <td>Anna Ferrari</td>
+                    <td style="text-align: center;">4</td>
+                    <td>Stazione Termini</td>
+                    <td>05/12/2025 16:30</td>
+                    <td style="color: #666;">05/12/2025</td>
+                    <td style="color: #999; font-size: 12px;">06/12/2025</td>
+                </tr>
+                <tr class="expanded-row" id="detail-129">
+                    <td colspan="8">
+                        <div class="expanded-content">
+                            <div class="archived-alert">
+                                <span><strong>Richiesta archiviata</strong> - Archiviata il 06/12/2025 automaticamente</span>
+                            </div>
+                            
+                            <div style="padding: 15px; background: #e2e3e5; border-radius: 4px; border-left: 4px solid #6c757d;">
+                                <strong>🚫 Annullata dal richiedente</strong>
+                                <p style="margin: 10px 0 0 0; font-size: 13px;">Anna Ferrari ha annullato il 05/12/2025 alle 14:22.<br>
+                                <strong>Motivazione:</strong> "Riunione posticipata a data da destinarsi"</p>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- APPROVATA COMPLETATA -->
+                <tr onclick="toggleRow('detail-142')">
+                    <td>
+                        <span class="expand-icon" id="icon-142"></span>
+                        <strong>142</strong>
+                    </td>
+                    <td>
+                        <span class="stato-badge stato-approvata">APPROVATA</span>
+                    </td>
+                    <td>Mario Rossi</td>
+                    <td style="text-align: center;">3</td>
+                    <td>Ministero Difesa</td>
+                    <td>15/12/2025 09:30</td>
+                    <td style="color: #666;">15/12/2025</td>
+                    <td style="color: #999; font-size: 12px;">20/12/2025</td>
+                </tr>
+                <tr class="expanded-row" id="detail-142">
+                    <td colspan="8">
+                        <div class="expanded-content">
+                            <div class="archived-alert">
+                                <span><strong>Richiesta archiviata</strong> - Archiviata il 20/12/2025 da Mario Rossi - Trasporto completato</span>
+                            </div>
+                            
+                            <div style="padding: 15px; background: #d4edda; border-radius: 4px; border-left: 4px solid #28a745;">
+                                <strong style="color: #155724;">✓ Approvata e completata</strong>
+                                <p style="margin: 8px 0 0 0; font-size: 13px;">Trasporto effettuato regolarmente il 15/12/2025.</p>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- NON FATTIBILE COMPLETATA -->
+                <tr onclick="toggleRow('detail-138')">
+                    <td>
+                        <span class="expand-icon" id="icon-138"></span>
+                        <strong>138</strong>
+                    </td>
+                    <td>
+                        <span class="stato-badge stato-rifiutata">NON FATTIBILE</span>
+                    </td>
+                    <td>Laura Bianchi</td>
+                    <td style="text-align: center;">2</td>
+                    <td>Aeroporto Fiumicino</td>
+                    <td>10/12/2025 14:00</td>
+                    <td style="color: #666;">10/12/2025</td>
+                    <td style="color: #999; font-size: 12px;">12/12/2025</td>
+                </tr>
+                <tr class="expanded-row" id="detail-138">
+                    <td colspan="8">
+                        <div class="expanded-content">
+                            <div class="archived-alert">
+                                <span><strong>Richiesta archiviata</strong> - Archiviata il 12/12/2025 automaticamente</span>
+                            </div>
+                            
+                            <div style="padding: 15px; background: #f8d7da; border-radius: 4px; border-left: 4px solid #dc3545;">
+                                <strong style="color: #721c24;">❌ Rifiutata - Data trasporto conclusa</strong>
+                                <p style="margin: 10px 0 0 0; font-size: 13px;"><strong>SMD:</strong> Richiesta fuori termini. Non disponibilità mezzi.</p>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- GESTITA REPARTO -->
+                <tr onclick="toggleRow('detail-135')">
+                    <td>
+                        <span class="expand-icon" id="icon-135"></span>
+                        <strong>135</strong>
+                    </td>
+                    <td>
+                        <span class="stato-badge stato-gestita">GESTITA REPARTO</span>
+                    </td>
+                    <td>Giuseppe Verdi</td>
+                    <td style="text-align: center;">1</td>
+                    <td>Sede ENEA Lungotevere</td>
+                    <td>08/12/2025 11:00</td>
+                    <td style="color: #666;">08/12/2025</td>
+                    <td style="color: #999; font-size: 12px;">09/12/2025</td>
+                </tr>
+                <tr class="expanded-row" id="detail-135">
+                    <td colspan="8">
+                        <div class="expanded-content">
+                            <div class="archived-alert">
+                                <span><strong>Richiesta archiviata</strong> - Archiviata il 09/12/2025 da Segreteria SGD</span>
+                            </div>
+                            
+                            <div style="padding: 15px; background: #d1ecf1; border-radius: 4px; border-left: 4px solid #17a2b8;">
+                                <strong style="color: #0c5460;">ℹ️ Gestita dalla Segreteria - Trasporto completato</strong>
+                                <p style="margin: 10px 0 0 0; font-size: 13px;">Trasporto con mezzo del reparto. Autista: Dott. Colletti.</p>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="pagination-wrapper">
+            <div style="color: #666; font-size: 13px;">
+                Visualizzate <strong>1-50</strong> di <strong>239</strong> richieste archiviate
+            </div>
+            <ul class="pagination">
+                <li><a href="#">‹</a></li>
+                <li class="active"><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li><a href="#">›</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- MOCKUP: PULSANTE CANCELLA (ADMIN) -->
+    <div class="mockup-section">
+        <h4>📌 Mockup: Azione "Cancella" - Solo Admin (Remadife/Configuratore Reparto)</h4>
+        <p><strong>Scenario:</strong> Admin visualizza una richiesta e vuole cancellarla</p>
+        
+        <div class="example-box">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 2px solid #ddd;">
+                <div>
+                    <h5 style="margin: 0 0 5px 0;">Richiesta #TR-2025-00157</h5>
+                    <span class="stato-badge" style="background: #fff3cd; color: #856404; border: 1px solid #ffeaa7;">BOZZA</span>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-delete">
+                        🗑️ Cancella
+                    </button>
+                    <button class="btn-secondary">
+                        ✖️ Chiudi
+                    </button>
+                </div>
+            </div>
+            
+            <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 12px; border-radius: 4px; margin-top: 15px;">
+                <strong>⚠️ Azione Amministrativa:</strong> Questo pulsante è visibile solo a Remadife e Configuratori Reparto
+            </div>
+        </div>
+    </div>
+
+    <!-- MOCKUP: DIALOG CANCELLAZIONE CRITICO -->
+    <div class="mockup-section">
+        <h4>📌 Mockup: Dialog Cancellazione (Doppia Conferma + Motivazione)</h4>
+        
+        <div style="background: rgba(0,0,0,0.1); padding: 40px; border-radius: 8px;">
+            <div style="max-width: 550px; margin: 0 auto; background: white; border-radius: 6px; box-shadow: 0 6px 24px rgba(0,0,0,0.2);">
+                <div style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); color: white; padding: 18px 22px; border-radius: 6px 6px 0 0;">
+                    <h5 style="margin: 0; font-weight: 700; font-size: 17px;">⚠️ ATTENZIONE: Cancellazione Richiesta</h5>
+                </div>
+                <div style="padding: 25px;">
+                    <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 4px; padding: 15px; margin-bottom: 20px;">
+                        <p style="margin: 0; font-size: 14px; font-weight: 600; color: #856404;">
+                            ⚠️ Stai per cancellare questa richiesta. L'operazione è <strong>irreversibile</strong> e la richiesta verrà spostata nell'archivio storico con stato CANCELLATA.
+                        </p>
+                    </div>
+                    
+                    <div style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 4px; padding: 15px; margin-bottom: 20px;">
+                        <div style="font-size: 11px; color: #666; font-weight: 700; margin-bottom: 6px; text-transform: uppercase;">Richiesta da cancellare:</div>
+                        <div style="font-size: 15px;"><strong>#TR-2025-00157</strong> - Test Destinazione</div>
+                        <div style="margin-top: 8px;">
+                            <span class="stato-badge" style="background: #fff3cd; color: #856404; font-size: 10px;">BOZZA</span>
+                            <span style="margin-left: 10px; color: #666; font-size: 12px;">Creata da: Test Utente</span>
+                        </div>
+                    </div>
+                    
+                    <!-- CHECKBOX CONFERMA -->
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: flex; align-items: center; cursor: pointer; padding: 12px; background: #fff; border: 2px solid #dc3545; border-radius: 4px;">
+                            <input type="checkbox" id="confirmDelete" style="width: 20px; height: 20px; margin-right: 12px;">
+                            <span style="font-weight: 600; font-size: 13px;">Confermo di voler cancellare la richiesta #TR-2025-00157</span>
+                        </label>
+                    </div>
+                    
+                    <!-- MOTIVAZIONE OBBLIGATORIA -->
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-size: 12px; font-weight: 700; color: #333; margin-bottom: 6px; text-transform: uppercase;">
+                            Motivazione Cancellazione <span style="color: #dc3545;">*</span>
+                        </label>
+                        <textarea 
+                            style="width: 100%; min-height: 80px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; font-size: 13px;"
+                            placeholder="Specificare il motivo della cancellazione (obbligatorio)..."
+                        >Richiesta di test creata durante formazione utenti - non valida per operatività reale</textarea>
+                        <div style="font-size: 11px; color: #666; margin-top: 4px;">La motivazione sarà registrata nell'audit log</div>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: flex-end; gap: 12px;">
+                        <button class="btn-secondary">
+                            Annulla
+                        </button>
+                        <button class="btn-delete" id="confirmBtn" disabled>
+                            <span>🗑️</span> Conferma Cancellazione
+                        </button>
+                    </div>
+                    
+                    <script>
+                        document.getElementById('confirmDelete')?.addEventListener('change', function(e) {
+                            document.getElementById('confirmBtn').disabled = !e.target.checked;
+                            if (e.target.checked) {
+                                document.getElementById('confirmBtn').style.opacity = '1';
+                            } else {
+                                document.getElementById('confirmBtn').style.opacity = '0.5';
+                            }
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MOCKUP: TABELLA ARCHIVIABILITÀ -->
+    <div class="mockup-section" style="background: #e7f3ff; border-color: #0066CC;">
+        <h4 style="color: #004C99;">🔍 Condizioni di Archiviabilità - Riepilogo Completo</h4>
+        
+        <table style="width: 100%; background: white; border-collapse: collapse; margin-top: 15px; font-size: 13px;">
+            <thead style="background: #0066CC; color: white;">
+                <tr>
+                    <th style="padding: 10px; text-align: left; border: 1px solid white;">Stato</th>
+                    <th style="padding: 10px; text-align: left; border: 1px solid white;">Condizione</th>
+                    <th style="padding: 10px; text-align: center; border: 1px solid white; width: 120px;">Archiviabile?</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="background: #fff5f5;">
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>CANCELLATA</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">Sempre (già archiviata automaticamente alla cancellazione)</td>
+                    <td style="padding: 10px; border: 1px solid #ddd; text-align: center; color: #28a745; font-weight: 700;">✓ SÌ</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>ANNULLATA</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">dataRichiestaConclusa != null</td>
+                    <td style="padding: 10px; border: 1px solid #ddd; text-align: center; color: #28a745; font-weight: 700;">✓ SÌ</td>
+                </tr>
+                <tr style="background: #f8f9fa;">
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>APPROVATA</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">dataRichiestaConclusa <= oggi (trasporto passato)</td>
+                    <td style="padding: 10px; border: 1px solid #ddd; text-align: center; color: #28a745; font-weight: 700;">✓ SÌ</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>APPROVATA</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">dataRichiestaConclusa > oggi (trasporto futuro)</td>
+                    <td style="padding: 10px; border: 1px solid #ddd; text-align: center; color: #dc3545; font-weight: 700;">✗ NO</td>
+                </tr>
+                <tr style="background: #f8f9fa;">
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>NON FATTIBILE</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">dataRichiestaConclusa <= oggi</td>
+                    <td style="padding: 10px; border: 1px solid #ddd; text-align: center; color: #28a745; font-weight: 700;">✓ SÌ</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>GESTITA REPARTO</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">dataRichiestaConclusa <= oggi</td>
+                    <td style="padding: 10px; border: 1px solid #ddd; text-align: center; color: #28a745; font-weight: 700;">✓ SÌ</td>
+                </tr>
+                <tr style="background: #f8f9fa;">
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>BOZZA / IN VALUTAZIONE</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">Stati intermedi</td>
+                    <td style="padding: 10px; border: 1px solid #ddd; text-align: center; color: #dc3545; font-weight: 700;">✗ NO</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 12px; border-radius: 4px; margin-top: 15px;">
+            <strong>💡 Query Archiviabilità (SQL):</strong><br>
+            <code style="display: block; margin-top: 8px; font-family: monospace; font-size: 11px; line-height: 1.6;">
+                WHERE isArchived = false AND (<br>
+                &nbsp;&nbsp;stato = 'Annullata'<br>
+                &nbsp;&nbsp;OR stato = 'Cancellata'<br>
+                &nbsp;&nbsp;OR (stato IN ('Approvata', 'Non fattibile', 'Gestita reparto')<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AND dataRichiestaConclusa <= CURRENT_DATE)<br>
+                )
+            </code>
+        </div>
+    </div>
+
+    <script>
+        function toggleRow(rowId) {
+            const row = document.getElementById(rowId);
+            const iconId = rowId.replace('detail-', 'icon-');
+            const icon = document.getElementById(iconId);
+            
+            if (!row) return;
+            
+            if (row.classList.contains('show')) {
+                row.classList.remove('show');
+                if (icon) icon.classList.remove('expanded');
+            } else {
+                document.querySelectorAll('.expanded-row').forEach(r => r.classList.remove('show'));
+                document.querySelectorAll('.expand-icon').forEach(i => i.classList.remove('expanded'));
+                
+                row.classList.add('show');
+                if (icon) icon.classList.add('expanded');
+            }
+        }
+    </script>
+</body>
+</html>

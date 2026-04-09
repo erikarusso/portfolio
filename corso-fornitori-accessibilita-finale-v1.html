@@ -1,0 +1,2646 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accessibilità Web per Fornitori PA - Factor-Y</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .slide-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .slide {
+            min-height: 100vh;
+            padding: 60px 80px;
+            display: none;
+            page-break-after: always;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        .slide-header {
+            border-bottom: 4px solid #0066cc;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            color: #0066cc;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            color: #0066cc;
+            font-size: 2em;
+            margin: 30px 0 20px 0;
+        }
+        
+        h3 {
+            color: #333;
+            font-size: 1.5em;
+            margin: 20px 0 15px 0;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.3em;
+        }
+        
+        ul, ol {
+            margin: 20px 0 20px 40px;
+        }
+        
+        li {
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+        
+        .highlight-box {
+            background: #e6f2ff;
+            border-left: 5px solid #0066cc;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .success-box {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .nav-button {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: background 0.3s;
+        }
+        
+        .nav-button:hover {
+            background: #0052a3;
+        }
+        
+        .nav-button:focus {
+            outline: 3px solid #ffc107;
+            outline-offset: 2px;
+        }
+        
+        .slide-number {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: #333;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #0066cc;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+        
+        .icon {
+            font-size: 3em;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        /* Quiz Styles */
+        .quiz-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #0066cc;
+        }
+        
+        .quiz-timer {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #0066cc;
+            background: #e6f2ff;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+        
+        .quiz-timer.warning {
+            color: #dc3545;
+            background: #f8d7da;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .quiz-question {
+            background: #f9f9f9;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            border-left: 5px solid #0066cc;
+        }
+        
+        .quiz-question h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .quiz-options {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .quiz-option {
+            margin: 10px 0;
+        }
+        
+        .quiz-option label {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .quiz-option label:hover {
+            border-color: #0066cc;
+            background: #f0f8ff;
+        }
+        
+        .quiz-option input[type="radio"] {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .quiz-option label.correct {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+        
+        .quiz-option label.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+        
+        .quiz-option label.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        .quiz-submit {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        .quiz-submit:hover:not(:disabled) {
+            background: #218838;
+        }
+        
+        .quiz-submit:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        
+        .quiz-submit:focus {
+            outline: 3px solid #ffc107;
+            outline-offset: 2px;
+        }
+        
+        .quiz-result {
+            background: #e6f2ff;
+            border: 2px solid #0066cc;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .quiz-result.excellent {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        
+        .quiz-result.good {
+            background: #fff3cd;
+            border-color: #ffc107;
+        }
+        
+        .quiz-result.poor {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+        
+        .quiz-score {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .trophy {
+            font-size: 5em;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-30px); }
+            60% { transform: translateY(-15px); }
+        }
+        
+        .quiz-locked-message {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        @media print {
+            .navigation, .slide-number, .quiz-container {
+                display: none;
+            }
+            .slide {
+                display: block !important;
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        
+        <!-- Slide 1: Titolo -->
+        <div class="slide active">
+            <div style="text-align: center; padding-top: 150px;">
+                <h1 style="font-size: 3.5em; margin-bottom: 30px;">Accessibilità Web<br>e delle Applicazioni</h1>
+                <p class="subtitle" style="font-size: 1.5em; margin-bottom: 50px;">Corso di Formazione</p>
+                <p style="font-size: 1.2em; color: #666;">Factor-Y</p>
+                <p style="font-size: 1em; color: #999; margin-top: 50px;">4-6 ore di formazione autonoma</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Messaggio di Benvenuto -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>Benvenuti - Fornitori PA</h1>
+            </div>
+            <div class="highlight-box">
+                <p style="font-size: 1.2em; line-height: 1.8;">
+                    <strong>L'accessibilità web è un requisito contrattuale fondamentale</strong> per i fornitori che lavorano con la Pubblica Amministrazione. 
+                    Questo corso vi fornirà le competenze tecniche e la consapevolezza normativa necessarie per garantire la conformità dei vostri deliverable.
+                </p>
+            </div>
+            <div class="warning-box" style="margin-top: 30px;">
+                <h3>⚠️ Per i Fornitori PA:</h3>
+                <ul style="margin: 15px 0 0 20px;">
+                    <li><strong>Obbligo contrattuale</strong>: WCAG 2.1 livello AA standard</li>
+                    <li><strong>Verifica soggettiva</strong> obbligatoria sopra soglia (~€140.000)</li>
+                    <li><strong>Documentazione</strong> tecnica richiesta nei deliverable</li>
+                    <li><strong>Rischi non conformità</strong>: penali, mancata accettazione, esclusione bandi</li>
+                </ul>
+            </div>
+            <div class="success-box" style="margin-top: 20px;">
+                <p style="font-size: 1.05em;">
+                    <strong>✅ Benefici:</strong> Qualità codice superiore, competenza certificabile, protezione legale, portfolio dimostrabile
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Obiettivi del Corso -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>Obiettivi del Corso</h1>
+            </div>
+            <h2>Cosa imparerai:</h2>
+            <ul>
+                <li><strong>Conoscere gli obblighi contrattuali</strong> e normativi per fornitori PA</li>
+                <li><strong>Implementare WCAG 2.1 livello AA</strong> nei vostri progetti</li>
+                <li><strong>Organizzare la verifica soggettiva</strong> (quando obbligatoria)</li>
+                <li><strong>Produrre documentazione tecnica</strong> di conformità</li>
+                <li><strong>Usare strumenti di testing</strong> e integrarli in CI/CD</li>
+                <li><strong>Supportare il cliente PA</strong> nella dichiarazione accessibilità</li>
+            </ul>
+            <div class="success-box" style="margin-top: 40px;">
+                <strong>Target:</strong> Sviluppatori, Designer, Project Manager che lavorano con clienti PA
+            </div>
+            <div class="note-box" style="margin-top: 20px;">
+                <strong>💡 Nota:</strong> Questo corso si concentra sugli aspetti rilevanti per i fornitori. 
+                Alcuni obblighi (es. obiettivi annuali, monitoraggio AGID) sono responsabilità esclusiva del cliente PA.
+            </div>
+        </div>
+
+        <!-- Slide 4: Struttura del Corso -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>Struttura del Corso - Versione Fornitori</h1>
+            </div>
+            <h2>5 Moduli + Verifica Soggettiva</h2>
+            <div style="margin-top: 30px;">
+                <div style="background: #e6f2ff; padding: 15px; margin: 15px 0; border-left: 5px solid #0066cc;">
+                    <h3 style="margin: 0 0 10px 0;">Modulo 1: Fondamenti e Normativa (60 min)</h3>
+                    <p>Principi WCAG, normativa PA, responsabilità fornitore vs cliente</p>
+                </div>
+                <div style="background: #e6f2ff; padding: 15px; margin: 15px 0; border-left: 5px solid #0066cc;">
+                    <h3 style="margin: 0 0 10px 0;">Modulo 2: Principi WCAG Tecnici (75 min)</h3>
+                    <p>Criteri successo WCAG 2.1 AA, contrasti, ARIA</p>
+                </div>
+                <div style="background: #e6f2ff; padding: 15px; margin: 15px 0; border-left: 5px solid #0066cc;">
+                    <h3 style="margin: 0 0 10px 0;">Modulo 3: Implementazione e Testing (90 min)</h3>
+                    <p>HTML semantico, tool automatici, screen reader, <strong>CI/CD automation</strong></p>
+                </div>
+                <div style="background: #e6f2ff; padding: 15px; margin: 15px 0; border-left: 5px solid #0066cc;">
+                    <h3 style="margin: 0 0 10px 0;">Modulo 4: Casi di Studio (45 min)</h3>
+                    <p>Bootstrap Italia, React, HCL Digital Experience</p>
+                </div>
+                <div style="background: #f8d7da; padding: 15px; margin: 15px 0; border-left: 5px solid #dc3545;">
+                    <h3 style="margin: 0 0 10px 0;">🔴 Modulo 5: Verifica Soggettiva (30 min)</h3>
+                    <p><strong>CRITICO:</strong> Obbligo contrattuale forniture sopra soglia comunitaria</p>
+                </div>
+                <div style="background: #fff3cd; padding: 15px; margin: 15px 0; border-left: 5px solid #ffc107;">
+                    <h3 style="margin: 0 0 10px 0;">Quiz di Verifica</h3>
+                    <p>5 domande a scelta multipla al termine di ogni modulo (25 domande totali)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODULO 1 -->
+        
+        <!-- Slide 5: Modulo 1 - Intro -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>Modulo 1: Accessibilità</h1>
+            </div>
+            <div class="icon">♿</div>
+            <h2 style="text-align: center;">Cosa si intende per accessibilità</h2>
+            <div class="highlight-box" style="margin-top: 40px;">
+                <p style="font-size: 1.2em; text-align: center;">
+                    L'accessibilità web si riferisce alla possibilità per <strong>tutte le persone</strong>, comprese quelle con disabilità, di <strong>percepire, comprendere, navigare e interagire</strong> con il web, nonché di contribuire al web stesso.
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Principi POUR -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>I 4 Principi Fondamentali: POUR</h1>
+            </div>
+            <div class="two-column">
+                <div>
+                    <div style="background: #d4edda; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                        <h3>🔍 Percepibile</h3>
+                        <p>Le informazioni devono essere presentate in modi che gli utenti possano percepire</p>
+                    </div>
+                    <div style="background: #d4edda; padding: 20px; border-radius: 10px;">
+                        <h3>⚙️ Operabile</h3>
+                        <p>I componenti dell'interfaccia devono essere operabili da tutti</p>
+                    </div>
+                </div>
+                <div>
+                    <div style="background: #d4edda; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                        <h3>💡 Comprensibile</h3>
+                        <p>Le informazioni e il funzionamento devono essere chiari</p>
+                    </div>
+                    <div style="background: #d4edda; padding: 20px; border-radius: 10px;">
+                        <h3>🛠️ Robusto</h3>
+                        <p>Il contenuto deve essere interpretabile da varie tecnologie</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Categorie di Disabilità -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>Categorie di Disabilità</h1>
+            </div>
+            <table>
+                <tr>
+                    <th>Categoria</th>
+                    <th>Esempi</th>
+                    <th>Barriere Comuni</th>
+                </tr>
+                <tr>
+                    <td><strong>Visive</strong></td>
+                    <td>Cecità, ipovisione, daltonismo</td>
+                    <td>Immagini senza alt, contrasto insufficiente</td>
+                </tr>
+                <tr>
+                    <td><strong>Uditive</strong></td>
+                    <td>Sordità, ipoacusia</td>
+                    <td>Video senza sottotitoli, solo audio</td>
+                </tr>
+                <tr>
+                    <td><strong>Motorie</strong></td>
+                    <td>Paralisi, tremori, artrite</td>
+                    <td>Solo mouse, target piccoli, timeout</td>
+                </tr>
+                <tr>
+                    <td><strong>Cognitive</strong></td>
+                    <td>Dislessia, ADHD, autismo</td>
+                    <td>Testo complesso, interfacce confuse</td>
+                </tr>
+            </table>
+            <div class="warning-box" style="margin-top: 20px;">
+                <strong>Ricorda:</strong> Esistono anche disabilità <strong>temporanee</strong> (braccio rotto) e <strong>situazionali</strong> (luce solare forte, ambienti rumorosi)
+            </div>
+        </div>
+
+        <!-- Slide 8: Tecnologie Assistive -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>Tecnologie Assistive</h1>
+            </div>
+            <h2>Screen Reader (Lettori di schermo)</h2>
+            <ul>
+                <li><strong>JAWS</strong> - Commerciale per Windows, molto potente</li>
+                <li><strong>NVDA</strong> - Open source per Windows, molto diffuso</li>
+                <li><strong>VoiceOver</strong> - Integrato in macOS e iOS</li>
+                <li><strong>TalkBack</strong> - Per dispositivi Android</li>
+            </ul>
+            <h2 style="margin-top: 30px;">Navigazione da Tastiera</h2>
+            <div class="two-column">
+                <div>
+                    <ul>
+                        <li><strong>Tab</strong> - Sposta il focus avanti</li>
+                        <li><strong>Shift+Tab</strong> - Sposta il focus indietro</li>
+                    </ul>
+                </div>
+                <div>
+                    <ul>
+                        <li><strong>Enter/Spazio</strong> - Attiva controlli</li>
+                        <li><strong>Frecce</strong> - Navigano tra opzioni</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Quadro Normativo -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>Quadro Normativo Italiano</h1>
+            </div>
+            <div style="background: #e6f2ff; padding: 20px; margin: 20px 0; border-radius: 10px;">
+                <h3>📜 Legge Stanca (Legge 4/2004)</h3>
+                <p>Prima normativa organica italiana sull'accessibilità informatica. Obbliga la PA a garantire l'accessibilità dei propri siti web.</p>
+            </div>
+            <div style="background: #e6f2ff; padding: 20px; margin: 20px 0; border-radius: 10px;">
+                <h3>📜 D.Lgs. 106/2018</h3>
+                <p>Recepisce la Direttiva UE 2016/2102. Adotta le <strong>WCAG 2.1 livello AA</strong> come standard. Estende gli obblighi alle <strong>applicazioni mobili</strong>.</p>
+            </div>
+            <div style="background: #fff3cd; padding: 20px; margin: 20px 0; border-radius: 10px;">
+                <h3>🇪🇺 European Accessibility Act (Direttiva 2019/882)</h3>
+                <p>Recepimento entro giugno 2025. Estende gli obblighi anche al <strong>settore privato</strong> (e-commerce, servizi bancari, ecc.).</p>
+            </div>
+        </div>
+
+        <!-- Slide 10: Obblighi Principali -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>Obblighi Principali - D.Lgs. 106/2018</h1>
+            </div>
+            <h2>Chi deve conformarsi:</h2>
+            <ul>
+                <li>Amministrazioni pubbliche (PA)</li>
+                <li>Enti pubblici economici</li>
+                <li>Aziende concessionarie di servizi pubblici</li>
+                <li>Organismi di diritto pubblico</li>
+            </ul>
+            <h2 style="margin-top: 30px;">Cosa devono fare:</h2>
+            <div class="highlight-box">
+                <ul>
+                    <li>Conformità alle <strong>WCAG 2.1 livello AA</strong></li>
+                    <li>Pubblicare una <strong>dichiarazione di accessibilità</strong></li>
+                    <li>Fornire un <strong>meccanismo di feedback</strong></li>
+                    <li>Procedure di <strong>monitoraggio</strong></li>
+                </ul>
+            </div>
+            <div class="warning-box" style="margin-top: 20px;">
+                <strong>Sanzioni:</strong> Il mancato rispetto può comportare sanzioni amministrative, responsabilità dirigenziale ed esclusione da bandi pubblici.
+            </div>
+        </div>
+
+        <!-- Quiz Modulo 1 -->
+        <div class="slide" data-quiz="1">
+            <div class="slide-header">
+                <h1>Quiz di Verifica - Modulo 1</h1>
+            </div>
+            <div class="quiz-container">
+                <div class="quiz-header">
+                    <h2 style="margin: 0;">Test di Accessibilità</h2>
+                    <div class="quiz-timer" id="timer-quiz1">
+                        <span id="time-quiz1">02:00</span>
+                    </div>
+                </div>
+                
+                <form id="quiz-form-1">
+                    <!-- Domanda 1 -->
+                    <div class="quiz-question">
+                        <h3>1. Quante persone in Italia hanno disabilità riconosciute?</h3>
+                        <ul class="quiz-options">
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q1" value="A">
+                                    <span>A) 1 milione</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q1" value="B" data-correct="true">
+                                    <span>B) 3 milioni</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q1" value="C">
+                                    <span>C) 5 milioni</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q1" value="D">
+                                    <span>D) 10 milioni</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Domanda 2 -->
+                    <div class="quiz-question">
+                        <h3>2. Quale dei seguenti è un principio POUR delle WCAG?</h3>
+                        <ul class="quiz-options">
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q2" value="A">
+                                    <span>A) Performante</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q2" value="B" data-correct="true">
+                                    <span>B) Percepibile</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q2" value="C">
+                                    <span>C) Portatile</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q2" value="D">
+                                    <span>D) Protetto</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Domanda 3 -->
+                    <div class="quiz-question">
+                        <h3>3. Quale screen reader è gratuito e open source per Windows?</h3>
+                        <ul class="quiz-options">
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q3" value="A">
+                                    <span>A) JAWS</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q3" value="B" data-correct="true">
+                                    <span>B) NVDA</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q3" value="C">
+                                    <span>C) VoiceOver</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q3" value="D">
+                                    <span>D) TalkBack</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Domanda 4 -->
+                    <div class="quiz-question">
+                        <h3>4. La Legge Stanca (Legge 4/2004) riguarda principalmente:</h3>
+                        <ul class="quiz-options">
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q4" value="A">
+                                    <span>A) Solo i siti web commerciali</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q4" value="B" data-correct="true">
+                                    <span>B) L'accessibilità dei siti web della pubblica amministrazione</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q4" value="C">
+                                    <span>C) Esclusivamente le applicazioni mobile</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q4" value="D">
+                                    <span>D) Solo i social media</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Domanda 5 -->
+                    <div class="quiz-question">
+                        <h3>5. Quale tasto permette di spostarsi indietro tra gli elementi interattivi?</h3>
+                        <ul class="quiz-options">
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q5" value="A">
+                                    <span>A) Tab</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q5" value="B" data-correct="true">
+                                    <span>B) Shift+Tab</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q5" value="C">
+                                    <span>C) Alt+Tab</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q5" value="D">
+                                    <span>D) Ctrl+Tab</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <button type="button" class="quiz-submit" onclick="submitQuiz(1)" id="submit-quiz1">
+                        Invia Risposte
+                    </button>
+                </form>
+                
+                <div id="quiz-result-1" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- MODULO 2 -->
+
+        <!-- Slide 11: Modulo 2 - Intro -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>Modulo 2: I Principi WCAG</h1>
+            </div>
+            <div class="icon">📋</div>
+            <h2 style="text-align: center;">Web Content Accessibility Guidelines 2.1</h2>
+            <div class="highlight-box" style="margin-top: 40px;">
+                <p style="font-size: 1.2em;">
+                    Le <strong>WCAG 2.1</strong> sono gli standard internazionali per l'accessibilità web, sviluppati dal W3C. 
+                </p>
+                <p style="font-size: 1.2em; margin-top: 15px;">
+                    In Italia, il <strong>D.Lgs. 106/2018</strong> richiede la conformità al <strong>livello AA</strong>.
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 12: Livelli di Conformità -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>Livelli di Conformità WCAG</h1>
+            </div>
+            <div style="margin-top: 40px;">
+                <div style="background: #d4edda; padding: 25px; margin: 20px 0; border-radius: 10px;">
+                    <h3>Livello A</h3>
+                    <p>Requisiti minimi di accessibilità, più facili da implementare</p>
+                </div>
+                <div style="background: #0066cc; color: white; padding: 25px; margin: 20px 0; border-radius: 10px;">
+                    <h3 style="color: white;">Livello AA ⭐</h3>
+                    <p><strong>STANDARD RICHIESTO DALLA LEGGE ITALIANA</strong></p>
+                    <p>Bilancia accessibilità e fattibilità</p>
+                </div>
+                <div style="background: #f0f0f0; padding: 25px; margin: 20px 0; border-radius: 10px;">
+                    <h3>Livello AAA</h3>
+                    <p>Livello più alto, alcuni criteri possono essere difficili da soddisfare per tutti i contenuti</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Principio 1 - Percepibile -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>Principio 1: Percepibile</h1>
+            </div>
+            <h2>Linee guida principali:</h2>
+            <ul>
+                <li><strong>1.1 Alternative testuali</strong> - Fornire alt text per contenuti non testuali</li>
+                <li><strong>1.2 Media temporizzati</strong> - Sottotitoli per video, trascrizioni per audio</li>
+                <li><strong>1.3 Adattabile</strong> - Struttura semantica, informazioni non solo visive</li>
+                <li><strong>1.4 Distinguibile</strong> - Contrasto colori, ridimensionamento testo, no lampeggiamenti</li>
+            </ul>
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>Esempi pratici:</h3>
+                <ul>
+                    <li>Immagini con <code>alt="descrizione significativa"</code></li>
+                    <li>Contrasto testo/sfondo minimo <strong>4.5:1</strong></li>
+                    <li>Video con sottotitoli sincronizzati</li>
+                    <li>Informazioni non basate solo sul colore</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 14: Principio 2 - Operabile -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>Principio 2: Operabile</h1>
+            </div>
+            <h2>Linee guida principali:</h2>
+            <ul>
+                <li><strong>2.1 Accessibile da tastiera</strong> - Tutte le funzionalità utilizzabili da tastiera</li>
+                <li><strong>2.2 Tempo sufficiente</strong> - Timeout estensibili, contenuti in pausa</li>
+                <li><strong>2.3 Convulsioni</strong> - Niente lampeggiamenti pericolosi (>3 al secondo)</li>
+                <li><strong>2.4 Navigabile</strong> - Skip links, titoli descrittivi, focus visibile</li>
+                <li><strong>2.5 Modalità di input</strong> - Supporto per diversi dispositivi di input</li>
+            </ul>
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>Esempi pratici:</h3>
+                <ul>
+                    <li>Navigazione completa con <strong>Tab</strong> e <strong>Enter</strong></li>
+                    <li>Focus visibile sempre presente</li>
+                    <li>Link "Salta al contenuto"</li>
+                    <li>Titoli pagina descrittivi</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 15: Principio 3 - Comprensibile -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>Principio 3: Comprensibile</h1>
+            </div>
+            <h2>Linee guida principali:</h2>
+            <ul>
+                <li><strong>3.1 Leggibile</strong> - Lingua dichiarata (<code>lang="it"</code>)</li>
+                <li><strong>3.2 Prevedibile</strong> - Navigazione coerente, nessun cambiamento improvviso</li>
+                <li><strong>3.3 Assistenza nell'inserimento</strong> - Errori identificati, suggerimenti, conferme</li>
+            </ul>
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>Esempi pratici:</h3>
+                <ul>
+                    <li>Form con <strong>label</strong> associate</li>
+                    <li>Messaggi di errore <strong>chiari e specifici</strong></li>
+                    <li>Conferma per azioni <strong>irreversibili</strong></li>
+                    <li>Navigazione <strong>coerente</strong> tra pagine</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 16: Principio 4 - Robusto -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>Principio 4: Robusto</h1>
+            </div>
+            <h2>Linea guida principale:</h2>
+            <ul>
+                <li><strong>4.1 Compatibile</strong> - Codice valido, compatibilità con tecnologie assistive</li>
+            </ul>
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>Requisiti tecnici:</h3>
+                <ul>
+                    <li><strong>HTML semantico</strong> corretto</li>
+                    <li><strong>ARIA</strong> solo quando necessario</li>
+                    <li><strong>Nome, ruolo e valore</strong> per tutti i componenti</li>
+                    <li><strong>Messaggi di stato</strong> accessibili (live regions)</li>
+                </ul>
+            </div>
+            <div class="warning-box" style="margin-top: 30px;">
+                <strong>Regola d'oro ARIA:</strong> Non usare ARIA se puoi usare un elemento HTML nativo!
+            </div>
+        </div>
+
+        <!-- Quiz Modulo 2 -->
+        <div class="slide" data-quiz="2">
+            <div class="slide-header">
+                <h1>Quiz di Verifica - Modulo 2</h1>
+            </div>
+            <div class="quiz-container">
+                <div class="quiz-header">
+                    <h2 style="margin: 0;">I Principi WCAG</h2>
+                    <div class="quiz-timer" id="timer-quiz2">
+                        <span id="time-quiz2">02:00</span>
+                    </div>
+                </div>
+                
+                <form id="quiz-form-2">
+                    <!-- Domanda 1 -->
+                    <div class="quiz-question">
+                        <h3>1. Quale livello di conformità WCAG è richiesto dalla legge italiana?</h3>
+                        <ul class="quiz-options">
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q1" value="A">
+                                    <span>A) Livello A</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q1" value="B" data-correct="true">
+                                    <span>B) Livello AA</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q1" value="C">
+                                    <span>C) Livello AAA</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q1" value="D">
+                                    <span>D) Nessun livello specifico</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Domanda 2 -->
+                    <div class="quiz-question">
+                        <h3>2. Quale rapporto di contrasto minimo è richiesto per il testo normale?</h3>
+                        <ul class="quiz-options">
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q2" value="A">
+                                    <span>A) 3:1</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q2" value="B" data-correct="true">
+                                    <span>B) 4.5:1</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q2" value="C">
+                                    <span>C) 7:1</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q2" value="D">
+                                    <span>D) 10:1</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Domanda 3 -->
+                    <div class="quiz-question">
+                        <h3>3. Per il testo grande (18pt+ o 14pt+ grassetto), quale contrasto minimo è richiesto?</h3>
+                        <ul class="quiz-options">
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q3" value="A">
+                                    <span>A) 2:1</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q3" value="B" data-correct="true">
+                                    <span>B) 3:1</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q3" value="C">
+                                    <span>C) 4.5:1</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q3" value="D">
+                                    <span>D) 7:1</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Domanda 4 -->
+                    <div class="quiz-question">
+                        <h3>4. I contenuti che lampeggiano più di quante volte al secondo sono pericolosi?</h3>
+                        <ul class="quiz-options">
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q4" value="A">
+                                    <span>A) 1 volta al secondo</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q4" value="B" data-correct="true">
+                                    <span>B) 3 volte al secondo</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q4" value="C">
+                                    <span>C) 5 volte al secondo</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q4" value="D">
+                                    <span>D) 10 volte al secondo</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Domanda 5 -->
+                    <div class="quiz-question">
+                        <h3>5. Qual è la regola d'oro per l'uso di ARIA?</h3>
+                        <ul class="quiz-options">
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q5" value="A">
+                                    <span>A) Usare ARIA ovunque possibile</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q5" value="B" data-correct="true">
+                                    <span>B) Non usare ARIA se puoi usare un elemento HTML nativo</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q5" value="C">
+                                    <span>C) ARIA è obbligatorio per tutti gli elementi</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q5" value="D">
+                                    <span>D) ARIA sostituisce completamente HTML semantico</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <button type="button" class="quiz-submit" onclick="submitQuiz(2)" id="submit-quiz2">
+                        Invia Risposte
+                    </button>
+                </form>
+                
+                <div id="quiz-result-2" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- MODULO 3 -->
+
+        <!-- Slide 17: Modulo 3 - Intro -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>Modulo 3: Implementazione e Verifica</h1>
+            </div>
+            <div class="icon">🛠️</div>
+            <h2 style="text-align: center;">Strumenti e Metodologie</h2>
+            <div class="two-column" style="margin-top: 40px;">
+                <div style="background: #e6f2ff; padding: 20px; border-radius: 10px;">
+                    <h3>Implementazione</h3>
+                    <ul>
+                        <li>HTML Semantico</li>
+                        <li>ARIA quando necessario</li>
+                        <li>Form accessibili</li>
+                        <li>Focus management</li>
+                    </ul>
+                </div>
+                <div style="background: #d4edda; padding: 20px; border-radius: 10px;">
+                    <h3>Verifica</h3>
+                    <ul>
+                        <li>Strumenti automatici</li>
+                        <li>Test con tastiera</li>
+                        <li>Screen reader</li>
+                        <li>Checklist</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 18: HTML Semantico -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>HTML Semantico</h1>
+            </div>
+            <h2>Gli elementi HTML giusti comunicano significato</h2>
+            <div class="two-column" style="margin-top: 30px;">
+                <div>
+                    <div style="background: #d4edda; padding: 15px; margin-bottom: 15px; border-radius: 5px;">
+                        <h3 style="color: #28a745;">✅ Corretto</h3>
+                        <pre>&lt;header&gt;
+&lt;nav&gt;...&lt;/nav&gt;
+&lt;/header&gt;
+&lt;main&gt;
+&lt;article&gt;...&lt;/article&gt;
+&lt;/main&gt;
+&lt;footer&gt;...&lt;/footer&gt;</pre>
+                    </div>
+                </div>
+                <div>
+                    <div style="background: #f8d7da; padding: 15px; border-radius: 5px;">
+                        <h3 style="color: #dc3545;">❌ Scorretto</h3>
+                        <pre>&lt;div class="header"&gt;
+&lt;div class="nav"&gt;...&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="main"&gt;
+&lt;div class="article"&gt;...&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="footer"&gt;...&lt;/div&gt;</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 19: Strumenti di Testing -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>Strumenti di Testing Automatico</h1>
+            </div>
+            <table>
+                <tr>
+                    <th>Strumento</th>
+                    <th>Tipo</th>
+                    <th>Cosa verifica</th>
+                </tr>
+                <tr>
+                    <td><strong>Lighthouse</strong></td>
+                    <td>Chrome DevTools</td>
+                    <td>Audit completo, punteggio accessibilità</td>
+                </tr>
+                <tr>
+                    <td><strong>axe DevTools</strong></td>
+                    <td>Estensione browser</td>
+                    <td>Analisi dettagliata problemi WCAG</td>
+                </tr>
+                <tr>
+                    <td><strong>WAVE</strong></td>
+                    <td>Estensione browser</td>
+                    <td>Visualizzazione visuale errori sulla pagina</td>
+                </tr>
+                <tr>
+                    <td><strong>Contrast Checker</strong></td>
+                    <td>Tool dedicato</td>
+                    <td>Verifica contrasto colori</td>
+                </tr>
+            </table>
+            <div class="warning-box" style="margin-top: 30px;">
+                <strong>Importante:</strong> Gli strumenti automatici rilevano solo il <strong>30-40% dei problemi</strong>. Necessario testing manuale e con screen reader!
+            </div>
+        </div>
+
+        <!-- Slide 20: Processo di Testing -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>Processo di Testing Completo</h1>
+            </div>
+            <div style="margin-top: 20px;">
+                <div style="background: #e6f2ff; padding: 15px; margin: 10px 0; border-left: 5px solid #0066cc;">
+                    <strong>Fase 1: Testing automatico (20% effort, 30-40% copertura)</strong>
+                    <p>Lighthouse, axe DevTools, WAVE, validatore HTML</p>
+                </div>
+                <div style="background: #e6f2ff; padding: 15px; margin: 10px 0; border-left: 5px solid #0066cc;">
+                    <strong>Fase 2: Testing con tastiera (30% effort, 30% copertura)</strong>
+                    <p>Navigare con Tab, verificare focus, testare tutte le funzionalità</p>
+                </div>
+                <div style="background: #e6f2ff; padding: 15px; margin: 10px 0; border-left: 5px solid #0066cc;">
+                    <strong>Fase 3: Testing con screen reader (30% effort, 20% copertura)</strong>
+                    <p>NVDA (Windows) o VoiceOver (Mac), verificare annunci e navigazione</p>
+                </div>
+                <div style="background: #d4edda; padding: 15px; margin: 10px 0; border-left: 5px solid #28a745;">
+                    <strong>Fase 4: Testing con utenti reali (20% effort, 10% copertura)</strong>
+                    <p>Feedback qualitativo, problemi di usabilità reali</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 21: Integrazione CI/CD - Configurazione Pa11y-CI -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>🆕 CI/CD: Automazione Testing Accessibilità</h1>
+            </div>
+            <h2>Configurazione Pa11y-CI</h2>
+            <div class="highlight-box">
+                <p><strong>Pa11y-CI</strong> è uno strumento per testare l'accessibilità in pipeline CI/CD, costruito con Pa11y e puppeteer.</p>
+                <p style="margin-top: 10px;">✅ Testa multiple URL automaticamente | ✅ Fail build se errori | ✅ Report dettagliati</p>
+            </div>
+            
+            <h3>File .pa11yci (configurazione)</h3>
+            <pre><code>{
+  "defaults": {
+    "concurrency": 4,
+    "standard": "WCAG2AA",
+    "runners": ["axe"],
+    "timeout": 30000,
+    "chromeLaunchConfig": {
+      "args": ["--no-sandbox"]
+    }
+  },
+  "urls": [
+    "http://localhost:4000/",
+    "http://localhost:4000/pagina2.html"
+  ]
+}</code></pre>
+
+            <h3 style="margin-top: 20px;">package.json scripts</h3>
+            <pre><code>{
+  "scripts": {
+    "test:a11y": "pa11y-ci --sitemap http://localhost:4000/sitemap.xml --sitemap-exclude '/*.pdf'"
+  },
+  "devDependencies": {
+    "pa11y-ci": "^4.0.0"
+  }
+}</code></pre>
+
+            <div class="note-box">
+                <strong>📖 Documentazione:</strong> <a href="https://github.com/pa11y/pa11y-ci" target="_blank">github.com/pa11y/pa11y-ci</a>
+            </div>
+        </div>
+
+        <!-- Slide 22: CI/CD - GitHub Actions Workflow -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>🆕 CI/CD: GitHub Actions Workflow</h1>
+            </div>
+            <h2>File .github/workflows/accessibility.yml</h2>
+            <pre><code>name: Accessibility Tests
+
+on: [push, pull_request]
+
+jobs:
+  a11y-tests:
+    name: Test Accessibilità
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build site
+        run: npm run build
+      
+      - name: Start server
+        run: npm run serve &amp;
+      
+      - name: Run Pa11y-CI
+        run: npm run test:a11y
+      
+      - name: Upload report
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: accessibility-report
+          path: pa11y-report.json</code></pre>
+
+            <div class="success-box" style="margin-top: 20px;">
+                <h3>✅ Benefici Automazione:</h3>
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>Rilevamento problemi PRIMA del merge</li>
+                    <li>Feedback immediato agli sviluppatori</li>
+                    <li>Quality gate automatico (fail build se errori)</li>
+                    <li>Report salvati come artifact</li>
+                    <li>Costo: €0 con GitHub Actions (2000 min/mese free)</li>
+                </ul>
+            </div>
+            
+            <div class="warning-box" style="margin-top: 15px;">
+                <strong>⚠️ Nota:</strong> Testing automatico copre solo ~30-40%. Test manuali e screen reader rimangono ESSENZIALI prima del rilascio.
+            </div>
+        </div>
+
+        <!-- Quiz Modulo 3 -->
+        <div class="slide" data-quiz="3">
+            <div class="slide-header">
+                <h1>Quiz di Verifica - Modulo 3</h1>
+            </div>
+            <div class="quiz-container">
+                <div class="quiz-header">
+                    <h2 style="margin: 0;">Implementazione e Verifica</h2>
+                    <div class="quiz-timer" id="timer-quiz3">
+                        <span id="time-quiz3">02:00</span>
+                    </div>
+                </div>
+                
+                <form id="quiz-form-3">
+                    <!-- Domanda 1 -->
+                    <div class="quiz-question">
+                        <h3>1. Quale percentuale di problemi di accessibilità possono rilevare gli strumenti automatici?</h3>
+                        <ul class="quiz-options">
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q1" value="A">
+                                    <span>A) 100%</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q1" value="B" data-correct="true">
+                                    <span>B) 30-40%</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q1" value="C">
+                                    <span>C) 70-80%</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q1" value="D">
+                                    <span>D) 90-100%</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Domanda 2 -->
+                    <div class="quiz-question">
+                        <h3>2. Quale tool è integrato in Chrome DevTools per audit di accessibilità?</h3>
+                        <ul class="quiz-options">
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q2" value="A" data-correct="true">
+                                    <span>A) Lighthouse</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q2" value="B">
+                                    <span>B) WAVE</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q2" value="C">
+                                    <span>C) NVDA</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q2" value="D">
+                                    <span>D) W3C Validator</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Domanda 3 -->
+                    <div class="quiz-question">
+                        <h3>3. Nella fase di testing con tastiera, quale percentuale di copertura si raggiunge?</h3>
+                        <ul class="quiz-options">
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q3" value="A">
+                                    <span>A) 10%</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q3" value="B">
+                                    <span>B) 20%</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q3" value="C" data-correct="true">
+                                    <span>C) 30%</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q3" value="D">
+                                    <span>D) 50%</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Domanda 4 -->
+                    <div class="quiz-question">
+                        <h3>4. Quale elemento HTML è corretto per la navigazione principale?</h3>
+                        <ul class="quiz-options">
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q4" value="A">
+                                    <span>A) &lt;div class="nav"&gt;</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q4" value="B" data-correct="true">
+                                    <span>B) &lt;nav&gt;</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q4" value="C">
+                                    <span>C) &lt;menu&gt;</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q4" value="D">
+                                    <span>D) &lt;section&gt;</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Domanda 5 -->
+                    <div class="quiz-question">
+                        <h3>5. Quale tool CLI è ideale per automazione accessibilità in CI/CD?</h3>
+                        <ul class="quiz-options">
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q5" value="A">
+                                    <span>A) Lighthouse DevTools</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q5" value="B" data-correct="true">
+                                    <span>B) Pa11y-CI</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q5" value="C">
+                                    <span>C) WAVE extension</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q5" value="D">
+                                    <span>D) NVDA screen reader</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <button type="button" class="quiz-submit" onclick="submitQuiz(3)" id="submit-quiz3">
+                        Invia Risposte
+                    </button>
+                </form>
+                
+                <div id="quiz-result-3" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- MODULO 4 -->
+
+        <!-- Slide 21: Modulo 4 - Intro -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>Modulo 4: Casi di Studio</h1>
+            </div>
+            <div class="icon">💼</div>
+            <h2 style="text-align: center;">Bootstrap Italia, React e HCL DX</h2>
+            <div class="two-column" style="margin-top: 40px;">
+                <div style="background: #e6f2ff; padding: 20px; border-radius: 10px;">
+                    <h3>Bootstrap Italia</h3>
+                    <p>Toolkit di design per la PA italiana con componenti accessibili integrati</p>
+                </div>
+                <div style="background: #e6f2ff; padding: 20px; border-radius: 10px;">
+                    <h3>React</h3>
+                    <p>Sviluppare applicazioni React accessibili con gestione focus e ARIA</p>
+                </div>
+            </div>
+            <div style="background: #e6f2ff; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                <h3 style="text-align: center;">HCL Digital Experience</h3>
+                <p style="text-align: center;">CMS enterprise con considerazioni per temi e contenuti accessibili</p>
+            </div>
+        </div>
+
+        <!-- Slide 22: Bootstrap Italia -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>Bootstrap Italia</h1>
+            </div>
+            <h2>Caratteristiche di Accessibilità</h2>
+            <ul>
+                <li><strong>Componenti accessibili out-of-the-box</strong> - Navbar, form, modal, accordion</li>
+                <li><strong>Attributi ARIA integrati</strong> - aria-expanded, aria-controls, aria-labelledby</li>
+                <li><strong>Navigazione da tastiera</strong> - Tutti i componenti navigabili</li>
+                <li><strong>Design system conforme</strong> - Colori con contrasti verificati</li>
+            </ul>
+            <div class="success-box" style="margin-top: 30px;">
+                <h3>Best Practice:</h3>
+                <ul>
+                    <li>Non rimuovere mai le classi <code>sr-only</code></li>
+                    <li>Utilizzare i data-attributes corretti (<code>data-bs-*</code>)</li>
+                    <li>Rispettare la struttura HTML dei componenti</li>
+                    <li>Testare sempre la navigazione da tastiera</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 23: React e Accessibilità -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>React e Accessibilità</h1>
+            </div>
+            <h2>Punti chiave</h2>
+            <ul>
+                <li><strong>JSX supporta tutti gli attributi HTML di accessibilità</strong> - Inclusi ARIA</li>
+                <li><strong>htmlFor invece di for</strong> - <code>&lt;label htmlFor="nome"&gt;</code></li>
+                <li><strong>Gestione del focus</strong> - useRef e useEffect per focus programmatico</li>
+                <li><strong>Live regions</strong> - role="status" e aria-live per aggiornamenti dinamici</li>
+            </ul>
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>Strumenti utili:</h3>
+                <ul>
+                    <li><strong>eslint-plugin-jsx-a11y</strong> - Linter per accessibilità</li>
+                    <li><strong>React Aria</strong> - Hook per componenti accessibili</li>
+                    <li><strong>Reach UI</strong> - Libreria di componenti accessibili</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 24: HCL Digital Experience -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>HCL Digital Experience</h1>
+            </div>
+            <h2>Accessibilità nel CMS</h2>
+            <div class="two-column" style="margin-top: 30px;">
+                <div>
+                    <h3>Temi</h3>
+                    <ul>
+                        <li>Landmark regions</li>
+                        <li>Skip links</li>
+                        <li>Heading structure</li>
+                        <li>Navigazione accessibile</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Contenuti</h3>
+                    <ul>
+                        <li>Alt text per immagini</li>
+                        <li>Form accessibili</li>
+                        <li>Tabelle con header</li>
+                        <li>Template WCM corretti</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="warning-box" style="margin-top: 30px;">
+                <strong>Checklist HCL DX:</strong>
+                <ul>
+                    <li>Tema implementa skip links</li>
+                    <li>Tutti i landmark ARIA sono presenti</li>
+                    <li>Portlet hanno titoli descrittivi</li>
+                    <li>Template WCM supportano alt text</li>
+                    <li>Dichiarazione di accessibilità pubblicata</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Quiz Modulo 4 -->
+        <div class="slide" data-quiz="4">
+            <div class="slide-header">
+                <h1>Quiz di Verifica - Modulo 4</h1>
+            </div>
+            <div class="quiz-container">
+                <div class="quiz-header">
+                    <h2 style="margin: 0;">Casi di Studio</h2>
+                    <div class="quiz-timer" id="timer-quiz4">
+                        <span id="time-quiz4">02:00</span>
+                    </div>
+                </div>
+                
+                <form id="quiz-form-4">
+                    <!-- Domanda 1 -->
+                    <div class="quiz-question">
+                        <h3>1. Bootstrap Italia è basato su quale framework?</h3>
+                        <ul class="quiz-options">
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q1" value="A">
+                                    <span>A) Foundation</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q1" value="B" data-correct="true">
+                                    <span>B) Bootstrap 5</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q1" value="C">
+                                    <span>C) Tailwind CSS</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q1" value="D">
+                                    <span>D) Material UI</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Domanda 2 -->
+                    <div class="quiz-question">
+                        <h3>2. In React, quale attributo si usa al posto di "for" per le label?</h3>
+                        <ul class="quiz-options">
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q2" value="A">
+                                    <span>A) for</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q2" value="B" data-correct="true">
+                                    <span>B) htmlFor</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q2" value="C">
+                                    <span>C) labelFor</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q2" value="D">
+                                    <span>D) reactFor</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Domanda 3 -->
+                    <div class="quiz-question">
+                        <h3>3. Quale classe di Bootstrap Italia rende il contenuto visibile solo agli screen reader?</h3>
+                        <ul class="quiz-options">
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q3" value="A">
+                                    <span>A) hidden</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q3" value="B" data-correct="true">
+                                    <span>B) sr-only</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q3" value="C">
+                                    <span>C) screen-reader</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q3" value="D">
+                                    <span>D) invisible</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Domanda 4 -->
+                    <div class="quiz-question">
+                        <h3>4. In React, quale ruolo ARIA si usa per aggiornamenti dinamici?</h3>
+                        <ul class="quiz-options">
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q4" value="A">
+                                    <span>A) role="alert"</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q4" value="B" data-correct="true">
+                                    <span>B) role="status" con aria-live</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q4" value="C">
+                                    <span>C) role="update"</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q4" value="D">
+                                    <span>D) role="dynamic"</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Domanda 5 -->
+                    <div class="quiz-question">
+                        <h3>5. Cosa NON bisogna fare con le classi sr-only in Bootstrap Italia?</h3>
+                        <ul class="quiz-options">
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q5" value="A" data-correct="true">
+                                    <span>A) Rimuoverle</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q5" value="B">
+                                    <span>B) Usarle per contenuti accessibili</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q5" value="C">
+                                    <span>C) Applicarle a elementi importanti</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q5" value="D">
+                                    <span>D) Rispettarle nei componenti</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <button type="button" class="quiz-submit" onclick="submitQuiz(4)" id="submit-quiz4">
+                        Invia Risposte
+                    </button>
+                </form>
+                
+                <div id="quiz-result-4" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- MODULO 5: VERIFICA SOGGETTIVA -->
+
+        <!-- Slide 25: Modulo 5 - Intro Verifica Soggettiva -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>🔴 Modulo 5: Verifica Soggettiva</h1>
+            </div>
+            <div class="module-info">
+                <h3>⏱️ Durata: 30-40 minuti</h3>
+                <h3>🎯 Obiettivi di Apprendimento:</h3>
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>Comprendere quando la verifica soggettiva è obbligatoria</li>
+                    <li>Conoscere la metodologia in 5 fasi</li>
+                    <li>Identificare i 7 tipi di disabilità richiesti</li>
+                    <li>Applicare i 12 criteri di valutazione</li>
+                </ul>
+            </div>
+            <div class="danger-box" style="margin-top: 30px;">
+                <h3>⚠️ CRITICO PER FORNITORI:</h3>
+                <p style="font-size: 1.15em;">La verifica soggettiva è <strong>obbligatoria per legge</strong> per forniture <strong>sopra soglia comunitaria</strong> (~€140.000).</p>
+                <p style="margin-top: 10px;">Mancata esecuzione = <strong>non conformità contrattuale</strong> = rischio penali/esclusione.</p>
+            </div>
+        </div>
+
+        <!-- Slide 26: Verifica Soggettiva - Quando è Obbligatoria -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>Verifica Soggettiva - Obbligo Contrattuale</h1>
+            </div>
+            <div class="danger-box">
+                <h3>🔴 OBBLIGATORIA per:</h3>
+                <p style="font-size: 1.3em; margin: 15px 0;">
+                    Forniture <strong>SOPRA soglia comunitaria</strong> (art. 35 D.Lgs. 50/2016)
+                </p>
+                <p style="font-size: 1.1em;">Soglia attuale: <strong>€140.000 circa</strong> (aggiornata annualmente)</p>
+            </div>
+            
+            <h2 style="margin-top: 30px;">Cos'è la Verifica Soggettiva?</h2>
+            <div class="highlight-box">
+                <p style="font-size: 1.1em;">
+                    Valutazione del <strong>livello di qualità</strong> del sito/app (già giudicato accessibile dalla verifica tecnica) 
+                    attraverso <strong>test con utenti reali</strong> con varie tipologie di disabilità.
+                </p>
+            </div>
+            
+            <table style="margin-top: 30px;">
+                <tr>
+                    <th>Aspetto</th>
+                    <th>Sopra Soglia</th>
+                    <th>Sotto Soglia</th>
+                </tr>
+                <tr>
+                    <td><strong>Esperto fattori umani</strong></td>
+                    <td>✅ Obbligatorio</td>
+                    <td>⚪ Opzionale</td>
+                </tr>
+                <tr>
+                    <td><strong>Gruppo utenti disabili</strong></td>
+                    <td>✅ 7 tipi disabilità</td>
+                    <td>⚪ Opzionale</td>
+                </tr>
+                <tr>
+                    <td><strong>12 criteri valutazione</strong></td>
+                    <td>✅ Obbligatorio</td>
+                    <td>⚪ Opzionale</td>
+                </tr>
+                <tr>
+                    <td><strong>Rapporto conclusivo</strong></td>
+                    <td>✅ Obbligatorio</td>
+                    <td>⚪ Opzionale</td>
+                </tr>
+                <tr>
+                    <td><strong>Metodologia</strong></td>
+                    <td>Completa (5 fasi)</td>
+                    <td>Semplificata (euristiche)</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Slide 27: Metodologia 5 Fasi -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>Metodologia Verifica Soggettiva - 5 Fasi</h1>
+            </div>
+            <div style="background: #e6f2ff; padding: 20px; margin: 15px 0; border-radius: 10px; border-left: 5px solid #0066cc;">
+                <h3 style="margin-top: 0;">Fase 1: Analisi Esperto Fattori Umani</h3>
+                <p>L'esperto definisce:</p>
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>Contesti, scopi e scenari d'uso</li>
+                    <li>Task per il gruppo di valutazione</li>
+                    <li>Modalità di interazione</li>
+                </ul>
+            </div>
+            
+            <div style="background: #e6f2ff; padding: 20px; margin: 15px 0; border-radius: 10px; border-left: 5px solid #0066cc;">
+                <h3 style="margin-top: 0;">Fase 2: Costituzione Gruppo Valutazione</h3>
+                <p><strong>7 tipi di disabilità obbligatori:</strong></p>
+                <ul style="margin: 10px 0 0 20px; columns: 2;">
+                    <li>1. Sordità</li>
+                    <li>2. Ipovisione</li>
+                    <li>3. Daltonismo</li>
+                    <li>4. Cecità</li>
+                    <li>5. Disabilità motoria arti superiori</li>
+                    <li>6. Distrofia spastica</li>
+                    <li>7. Disabilità cognitiva</li>
+                </ul>
+            </div>
+            
+            <div style="background: #e6f2ff; padding: 20px; margin: 15px 0; border-radius: 10px; border-left: 5px solid #0066cc;">
+                <h3 style="margin-top: 0;">Fase 3: Esecuzione Task</h3>
+                <p>Utenti completano compiti specifici, esperto osserva e registra tempi, errori, commenti</p>
+            </div>
+            
+            <div style="background: #e6f2ff; padding: 20px; margin: 15px 0; border-radius: 10px; border-left: 5px solid #0066cc;">
+                <h3 style="margin-top: 0;">Fase 4: Analisi Dati</h3>
+                <p>Elaborazione questionari, performance utenti, osservazioni comportamentali</p>
+            </div>
+            
+            <div style="background: #d4edda; padding: 20px; margin: 15px 0; border-radius: 10px; border-left: 5px solid #28a745;">
+                <h3 style="margin-top: 0;">Fase 5: Rapporto Conclusivo</h3>
+                <p>Documento con valutazione finale basata su 12 criteri</p>
+                <p style="margin-top: 10px;"><strong>Successo test:</strong> valore medio ≥ 3 (su scala 1-5)</p>
+            </div>
+        </div>
+
+        <!-- Slide 28: 12 Criteri di Valutazione -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>12 Criteri di Valutazione Soggettiva</h1>
+            </div>
+            <table style="font-size: 0.95em;">
+                <tr>
+                    <th style="width: 30%;">Criterio</th>
+                    <th>Cosa Valuta</th>
+                </tr>
+                <tr>
+                    <td><strong>1. Percezione</strong></td>
+                    <td>Informazioni e comandi sempre disponibili e percettibili</td>
+                </tr>
+                <tr>
+                    <td><strong>2. Comprensibilità</strong></td>
+                    <td>Informazioni e comandi facili da capire e usare</td>
+                </tr>
+                <tr>
+                    <td><strong>3. Operabilità</strong></td>
+                    <td>Scelta immediata dell'azione per raggiungere obiettivo</td>
+                </tr>
+                <tr>
+                    <td><strong>4. Coerenza</strong></td>
+                    <td>Simboli e azioni con stesso significato</td>
+                </tr>
+                <tr>
+                    <td><strong>5. Salvaguardia salute</strong></td>
+                    <td>Caratteristiche idonee al benessere psicofisico</td>
+                </tr>
+                <tr>
+                    <td><strong>6. Sicurezza</strong></td>
+                    <td>Transazioni e dati affidabili e sicuri</td>
+                </tr>
+                <tr>
+                    <td><strong>7. Trasparenza</strong></td>
+                    <td>Comunica stato, effetti azioni, informazioni</td>
+                </tr>
+                <tr>
+                    <td><strong>8. Apprendibilità</strong></td>
+                    <td>Facile e rapido apprendimento</td>
+                </tr>
+                <tr>
+                    <td><strong>9. Aiuto e documentazione</strong></td>
+                    <td>Guide e help facilmente reperibili</td>
+                </tr>
+                <tr>
+                    <td><strong>10. Tolleranza errori</strong></td>
+                    <td>Previene errori, messaggi chiari quando occorrono</td>
+                </tr>
+                <tr>
+                    <td><strong>11. Gradevolezza</strong></td>
+                    <td>Favorisce e mantiene interesse utente</td>
+                </tr>
+                <tr>
+                    <td><strong>12. Flessibilità</strong></td>
+                    <td>Considera preferenze individuali e contesti</td>
+                </tr>
+            </table>
+            <div class="highlight-box" style="margin-top: 20px;">
+                <p><strong>📊 Valutazione:</strong> Scala 1-5 per ogni criterio | Almeno 7/12 criteri applicati | <strong>Media ≥ 3 = successo test</strong></p>
+            </div>
+            <div class="note-box">
+                <strong>📖 Riferimento:</strong> Manuale Verifica Soggettiva AGID (disponibile nei materiali del progetto)
+            </div>
+        </div>
+
+        <!-- Quiz Modulo 5 -->
+        <div class="slide" data-quiz="5">
+            <div class="slide-header">
+                <h1>Quiz di Verifica - Modulo 5</h1>
+            </div>
+            <div class="quiz-container">
+                <div class="quiz-header">
+                    <h2 style="margin: 0;">Verifica Soggettiva</h2>
+                    <div class="quiz-timer" id="timer-quiz5">
+                        <span id="time-quiz5">02:00</span>
+                    </div>
+                </div>
+                
+                <form id="quiz-form-5">
+                    <!-- Domanda 1 -->
+                    <div class="quiz-question">
+                        <h3>1. La verifica soggettiva è obbligatoria per forniture:</h3>
+                        <ul class="quiz-options">
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q1" value="A">
+                                    <span>A) Sempre, indipendentemente dal valore</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q1" value="B" data-correct="true">
+                                    <span>B) Sopra soglia comunitaria (~€140.000)</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q1" value="C">
+                                    <span>C) Mai, è sempre facoltativa</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q1" value="D">
+                                    <span>D) Solo per siti con più di 100 pagine</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Domanda 2 -->
+                    <div class="quiz-question">
+                        <h3>2. Quanti tipi di disabilità devono essere rappresentati nel gruppo di valutazione (sopra soglia)?</h3>
+                        <ul class="quiz-options">
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q2" value="A">
+                                    <span>A) 3</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q2" value="B">
+                                    <span>B) 5</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q2" value="C" data-correct="true">
+                                    <span>C) 7</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q2" value="D">
+                                    <span>D) 10</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Domanda 3 -->
+                    <div class="quiz-question">
+                        <h3>3. Quale valore medio dei 12 criteri determina il successo della verifica soggettiva?</h3>
+                        <ul class="quiz-options">
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q3" value="A">
+                                    <span>A) ≥ 2</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q3" value="B" data-correct="true">
+                                    <span>B) ≥ 3</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q3" value="C">
+                                    <span>C) ≥ 4</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q3" value="D">
+                                    <span>D) = 5 (perfetto)</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Domanda 4 -->
+                    <div class="quiz-question">
+                        <h3>4. Chi definisce i task e gli scenari d'uso nella verifica soggettiva?</h3>
+                        <ul class="quiz-options">
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q4" value="A" data-correct="true">
+                                    <span>A) L'esperto di fattori umani</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q4" value="B">
+                                    <span>B) Il cliente PA</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q4" value="C">
+                                    <span>C) Gli utenti con disabilità</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q4" value="D">
+                                    <span>D) AGID</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Domanda 5 -->
+                    <div class="quiz-question">
+                        <h3>5. Quanti criteri di valutazione devono essere applicati come minimo?</h3>
+                        <ul class="quiz-options">
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q5" value="A">
+                                    <span>A) 5 su 12</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q5" value="B" data-correct="true">
+                                    <span>B) 7 su 12</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q5" value="C">
+                                    <span>C) 10 su 12</span>
+                                </label>
+                            </li>
+                            <li class="quiz-option">
+                                <label>
+                                    <input type="radio" name="q5" value="D">
+                                    <span>D) Tutti i 12</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <button type="button" class="quiz-submit" onclick="submitQuiz(5)" id="submit-quiz5">
+                        Invia Risposte
+                    </button>
+                </form>
+                
+                <div id="quiz-result-5" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- Slide 29: Riepilogo e Risorse -->
+        <div class="slide">
+            <div class="slide-header">
+                <h1>Riepilogo e Risorse</h1>
+            </div>
+            <h2>Cosa abbiamo imparato:</h2>
+            <ul>
+                <li>✅ I 4 principi POUR e le categorie di disabilità</li>
+                <li>✅ La normativa italiana ed europea</li>
+                <li>✅ I criteri WCAG 2.1 livello AA</li>
+                <li>✅ Strumenti di testing e implementazione</li>
+                <li>✅ Best practice per Bootstrap Italia, React e HCL DX</li>
+            </ul>
+            <h2 style="margin-top: 30px;">Risorse utili:</h2>
+            <ul>
+                <li><strong>AGID</strong> - designers.italia.it/kit/accessibilita</li>
+                <li><strong>WCAG 2.1</strong> - w3.org/WAI/WCAG21/quickref</li>
+                <li><strong>WebAIM</strong> - webaim.org</li>
+                <li><strong>Bootstrap Italia</strong> - italia.github.io/bootstrap-italia</li>
+            </ul>
+        </div>
+
+        <!-- Slide 26: Conclusione -->
+        <div class="slide">
+            <div style="text-align: center; padding-top: 150px;">
+                <h1 style="font-size: 3em; margin-bottom: 30px;">Grazie!</h1>
+                <p style="font-size: 1.5em; margin-bottom: 50px;">L'accessibilità è una responsabilità condivisa</p>
+                <div class="success-box" style="max-width: 800px; margin: 0 auto;">
+                    <p style="font-size: 1.2em;">
+                        <strong>Ricorda:</strong> Ogni piccolo miglioramento nell'accessibilità rende il web più inclusivo per tutti.
+                    </p>
+                </div>
+                <p style="font-size: 1em; color: #666; margin-top: 100px;">
+                    Per domande o supporto, consulta le FAQ o contatta il team di sviluppo
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide Riepilogo Quiz -->
+        <div class="slide" id="quiz-summary-slide">
+            <div class="slide-header">
+                <h1>📊 Riepilogo Risultati Quiz</h1>
+            </div>
+            <div id="quiz-summary-container" style="margin-top: 30px;">
+                <div class="warning-box" style="text-align: center; margin-bottom: 30px;">
+                    <h3>⚠️ Completa tutti i quiz per vedere il riepilogo finale</h3>
+                    <p>Torna indietro e completa i quiz mancanti per visualizzare i tuoi risultati.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Navigazione -->
+    <div class="slide-number" id="slideNumber"></div>
+    <div class="navigation">
+        <button class="nav-button" onclick="previousSlide()" aria-label="Slide precedente">← Precedente</button>
+        <button class="nav-button" onclick="nextSlide()" aria-label="Slide successiva">Successiva →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        
+        // Sistema di gestione quiz
+        const quizData = {
+            completed: {
+                1: false,
+                2: false,
+                3: false,
+                4: false,
+                5: false
+            },
+            scores: {
+                1: 0,
+                2: 0,
+                3: 0,
+                4: 0,
+                5: 0
+            },
+            answers: {
+                1: {},
+                2: {},
+                3: {},
+                4: {},
+                5: {}
+            },
+            timers: {},
+            timerIntervals: {}
+        };
+
+        function showSlide(n) {
+            const targetSlide = (n + totalSlides) % totalSlides;
+            const targetSlideElement = slides[targetSlide];
+            
+            // Verifica se la slide target è un quiz
+            const quizNumber = targetSlideElement.getAttribute('data-quiz');
+            
+            if (quizNumber) {
+                // Verifica se il quiz precedente è stato completato
+                const prevQuizNumber = parseInt(quizNumber) - 1;
+                if (prevQuizNumber > 0 && !quizData.completed[prevQuizNumber]) {
+                    alert(`Devi completare il Quiz del Modulo ${prevQuizNumber} prima di procedere!`);
+                    return;
+                }
+            }
+            
+            // Verifica se stiamo cercando di andare avanti da un quiz non completato
+            const currentQuizNumber = slides[currentSlide].getAttribute('data-quiz');
+            if (currentQuizNumber && n > currentSlide && !quizData.completed[currentQuizNumber]) {
+                alert(`Devi completare il Quiz del Modulo ${currentQuizNumber} prima di procedere!`);
+                return;
+            }
+            
+            // Ferma il timer del quiz corrente se esiste
+            if (currentQuizNumber && quizData.timerIntervals[currentQuizNumber]) {
+                clearInterval(quizData.timerIntervals[currentQuizNumber]);
+            }
+            
+            slides[currentSlide].classList.remove('active');
+            currentSlide = targetSlide;
+            slides[currentSlide].classList.add('active');
+            updateSlideNumber();
+            
+            // Avvia il timer se è un quiz e non è stato completato
+            const newQuizNumber = slides[currentSlide].getAttribute('data-quiz');
+            if (newQuizNumber && !quizData.completed[newQuizNumber]) {
+                startQuizTimer(newQuizNumber);
+            }
+            
+            // Se è la slide di riepilogo, genera la tabella
+            if (targetSlideElement.id === 'quiz-summary-slide') {
+                generateQuizSummary();
+            }
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function previousSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        function updateSlideNumber() {
+            document.getElementById('slideNumber').textContent = `Slide ${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function startQuizTimer(quizNumber) {
+            let timeLeft = 120; // 2 minuti in secondi
+            quizData.timers[quizNumber] = timeLeft;
+            
+            const timerElement = document.getElementById(`timer-quiz${quizNumber}`);
+            const timeDisplay = document.getElementById(`time-quiz${quizNumber}`);
+            
+            quizData.timerIntervals[quizNumber] = setInterval(() => {
+                timeLeft--;
+                quizData.timers[quizNumber] = timeLeft;
+                
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                // Cambia colore quando mancano 30 secondi
+                if (timeLeft <= 30) {
+                    timerElement.classList.add('warning');
+                }
+                
+                // Tempo scaduto
+                if (timeLeft <= 0) {
+                    clearInterval(quizData.timerIntervals[quizNumber]);
+                    submitQuiz(quizNumber, true);
+                }
+            }, 1000);
+        }
+
+        function submitQuiz(quizNumber, timeExpired = false) {
+            // Ferma il timer
+            if (quizData.timerIntervals[quizNumber]) {
+                clearInterval(quizData.timerIntervals[quizNumber]);
+            }
+            
+            const form = document.getElementById(`quiz-form-${quizNumber}`);
+            const submitButton = document.getElementById(`submit-quiz${quizNumber}`);
+            const resultDiv = document.getElementById(`quiz-result-${quizNumber}`);
+            
+            // Disabilita il form
+            submitButton.disabled = true;
+            
+            let score = 0;
+            const totalQuestions = 5;
+            let detailedFeedback = '<div style="text-align: left; margin: 20px auto; max-width: 700px;">';
+            
+            // Valuta le risposte
+            for (let i = 1; i <= totalQuestions; i++) {
+                const questionName = `q${i}`;
+                const selectedOption = form.querySelector(`input[name="${questionName}"]:checked`);
+                const allOptions = form.querySelectorAll(`input[name="${questionName}"]`);
+                const correctOption = form.querySelector(`input[name="${questionName}"][data-correct="true"]`);
+                
+                // Trova i testi
+                const correctText = correctOption.parentElement.querySelector('span').textContent;
+                const selectedText = selectedOption ? selectedOption.parentElement.querySelector('span').textContent : 'Nessuna risposta';
+                
+                // Salva la risposta data
+                quizData.answers[quizNumber][i] = {
+                    selected: selectedOption ? selectedOption.value : null,
+                    correct: correctOption.value,
+                    isCorrect: selectedOption && selectedOption.getAttribute('data-correct') === 'true'
+                };
+                
+                // Disabilita tutte le opzioni
+                allOptions.forEach(option => {
+                    option.disabled = true;
+                    option.parentElement.classList.add('disabled');
+                });
+                
+                // Valuta e evidenzia
+                const isCorrect = selectedOption && selectedOption.getAttribute('data-correct') === 'true';
+                
+                if (selectedOption) {
+                    if (isCorrect) {
+                        score++;
+                        selectedOption.parentElement.classList.add('correct');
+                        detailedFeedback += `
+                            <div style="background: #d4edda; padding: 15px; margin: 10px 0; border-left: 5px solid #28a745; border-radius: 5px;">
+                                <strong>Domanda ${i}: ✅ Corretta</strong><br>
+                                <span style="color: #28a745;">La tua risposta: ${selectedText}</span>
+                            </div>
+                        `;
+                    } else {
+                        selectedOption.parentElement.classList.add('incorrect');
+                        correctOption.parentElement.classList.add('correct');
+                        detailedFeedback += `
+                            <div style="background: #f8d7da; padding: 15px; margin: 10px 0; border-left: 5px solid #dc3545; border-radius: 5px;">
+                                <strong>Domanda ${i}: ❌ Sbagliata</strong><br>
+                                <span style="color: #dc3545;">La tua risposta: ${selectedText}</span><br>
+                                <span style="color: #28a745;">Risposta corretta: ${correctText}</span>
+                            </div>
+                        `;
+                    }
+                } else {
+                    // Nessuna risposta selezionata
+                    correctOption.parentElement.classList.add('correct');
+                    detailedFeedback += `
+                        <div style="background: #f8d7da; padding: 15px; margin: 10px 0; border-left: 5px solid #dc3545; border-radius: 5px;">
+                            <strong>Domanda ${i}: ⚠️ Non risposta</strong><br>
+                            <span style="color: #666;">La tua risposta: Nessuna risposta fornita</span><br>
+                            <span style="color: #28a745;">Risposta corretta: ${correctText}</span>
+                        </div>
+                    `;
+                }
+            }
+            
+            detailedFeedback += '</div>';
+            
+            // Salva il punteggio
+            quizData.scores[quizNumber] = score;
+            quizData.completed[quizNumber] = true;
+            
+            // Mostra risultato
+            let resultClass = 'poor';
+            let resultMessage = '';
+            
+            if (timeExpired) {
+                resultMessage = '<h3 style="color: #dc3545;">⏱️ Tempo Scaduto!</h3>';
+            }
+            
+            if (score === 5) {
+                resultClass = 'excellent';
+                resultMessage += `<h3 style="color: #28a745;">🎉 Perfetto!</h3>`;
+            } else if (score >= 3) {
+                resultClass = 'good';
+                resultMessage += `<h3 style="color: #ffc107;">✓ Buon lavoro!</h3>`;
+            } else {
+                resultMessage += `<h3 style="color: #dc3545;">⚠ Può migliorare</h3>`;
+            }
+            
+            resultMessage += `
+                <div class="quiz-score">${score} / ${totalQuestions}</div>
+                <p><strong>Hai risposto correttamente a ${score} domande su ${totalQuestions}.</strong></p>
+                ${detailedFeedback}
+            `;
+            
+            // Verifica se tutti i quiz sono completati
+            const allCompleted = Object.values(quizData.completed).every(c => c);
+            const totalScore = Object.values(quizData.scores).reduce((a, b) => a + b, 0);
+            
+            if (allCompleted && totalScore === 25) {
+                resultMessage += `
+                    <div style="margin-top: 30px; padding: 20px; background: #fff3cd; border-radius: 10px;">
+                        <div class="trophy">🏆</div>
+                        <h2 style="color: #ffc107;">Congratulazioni!</h2>
+                        <p style="font-size: 1.2em;">Hai completato tutti i quiz con il punteggio massimo: <strong>25/25</strong>!</p>
+                        <p>Sei un fornitore esperto di accessibilità web per PA!</p>
+                    </div>
+                `;
+            }
+            
+            if (!timeExpired) {
+                resultMessage += `<p style="margin-top: 20px;"><em>Puoi ora procedere ${quizNumber < 4 ? 'al modulo successivo' : 'alla slide di riepilogo'}.</em></p>`;
+            } else {
+                resultMessage += `<p style="margin-top: 20px;"><em>Il tempo è scaduto. Le tue risposte sono state valutate.</em></p>`;
+            }
+            
+            resultDiv.innerHTML = `<div class="quiz-result ${resultClass}">${resultMessage}</div>`;
+            resultDiv.style.display = 'block';
+            
+            // Nascondi il form
+            form.style.display = 'none';
+        }
+
+        function generateQuizSummary() {
+            const container = document.getElementById('quiz-summary-container');
+            const allCompleted = Object.values(quizData.completed).every(c => c);
+            
+            if (!allCompleted) {
+                container.innerHTML = `
+                    <div class="warning-box" style="text-align: center; margin-bottom: 30px;">
+                        <h3>⚠️ Completa tutti i quiz per vedere il riepilogo finale</h3>
+                        <p>Torna indietro e completa i quiz mancanti per visualizzare i tuoi risultati.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const totalScore = Object.values(quizData.scores).reduce((a, b) => a + b, 0);
+            const totalQuestions = 25;
+            const percentage = Math.round((totalScore / totalQuestions) * 100);
+            
+            // Determina il messaggio finale in base al punteggio
+            let finalMessage = '';
+            let finalClass = '';
+            let finalIcon = '';
+            
+            if (percentage === 100) {
+                finalClass = 'excellent';
+                finalIcon = '🏆';
+                finalMessage = '<h2 style="color: #28a745;">Eccellente! Punteggio Perfetto!</h2><p style="font-size: 1.2em;">Hai dimostrato una padronanza completa dei principi di accessibilità web per fornitori PA. Sei pronto ad applicare queste conoscenze e garantire la conformità contrattuale!</p>';
+            } else if (percentage >= 80) {
+                finalClass = 'excellent';
+                finalIcon = '🌟';
+                finalMessage = '<h2 style="color: #28a745;">Ottimo Lavoro!</h2><p style="font-size: 1.2em;">Hai una solida comprensione dell\'accessibilità web e degli obblighi contrattuali. Continua ad approfondire gli argomenti dove hai avuto più difficoltà.</p>';
+            } else if (percentage >= 60) {
+                finalClass = 'good';
+                finalIcon = '👍';
+                finalMessage = '<h2 style="color: #ffc107;">Buon Risultato!</h2><p style="font-size: 1.2em;">Hai acquisito le basi dell\'accessibilità per fornitori. Ti consigliamo di rivedere specialmente il modulo sulla verifica soggettiva.</p>';
+            } else {
+                finalClass = 'poor';
+                finalIcon = '📚';
+                finalMessage = '<h2 style="color: #dc3545;">Continua a Studiare!</h2><p style="font-size: 1.2em;">Ti consigliamo di ripassare attentamente i materiali, in particolare gli obblighi contrattuali e la verifica soggettiva. L\'accessibilità web è fondamentale per i fornitori PA.</p>';
+            }
+            
+            let summaryHTML = `
+                <div class="quiz-result ${finalClass}" style="margin-bottom: 30px;">
+                    <div style="font-size: 4em;">${finalIcon}</div>
+                    ${finalMessage}
+                    <div class="quiz-score">${totalScore} / ${totalQuestions}</div>
+                    <p style="font-size: 1.3em; margin-top: 10px;"><strong>Percentuale: ${percentage}%</strong></p>
+                </div>
+                
+                <h2 style="margin: 30px 0 20px 0;">Dettaglio Punteggi per Modulo</h2>
+                <table style="width: 100%; border-collapse: collapse; margin: 20px 0; background: white;">
+                    <thead>
+                        <tr style="background: #0066cc; color: white;">
+                            <th style="padding: 15px; text-align: left; border: 1px solid #ddd;">Modulo</th>
+                            <th style="padding: 15px; text-align: center; border: 1px solid #ddd;">Punteggio</th>
+                            <th style="padding: 15px; text-align: center; border: 1px solid #ddd;">Percentuale</th>
+                            <th style="padding: 15px; text-align: center; border: 1px solid #ddd;">Valutazione</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            const moduleNames = {
+                1: 'Modulo 1: Fondamenti e Normativa',
+                2: 'Modulo 2: Principi WCAG Tecnici',
+                3: 'Modulo 3: Implementazione e Testing',
+                4: 'Modulo 4: Casi di Studio',
+                5: 'Modulo 5: Verifica Soggettiva'
+            };
+            
+            for (let i = 1; i <= 5; i++) {
+                const moduleScore = quizData.scores[i];
+                const modulePercentage = (moduleScore / 5) * 100;
+                let badge = '';
+                let rowClass = '';
+                
+                if (moduleScore === 5) {
+                    badge = '🌟 Eccellente';
+                    rowClass = 'style="background: #d4edda;"';
+                } else if (moduleScore >= 3) {
+                    badge = '✓ Buono';
+                    rowClass = 'style="background: #fff3cd;"';
+                } else {
+                    badge = '⚠ Da rivedere';
+                    rowClass = 'style="background: #f8d7da;"';
+                }
+                
+                summaryHTML += `
+                    <tr ${rowClass}>
+                        <td style="padding: 12px; border: 1px solid #ddd;"><strong>${moduleNames[i]}</strong></td>
+                        <td style="padding: 12px; text-align: center; border: 1px solid #ddd; font-weight: bold;">${moduleScore} / 5</td>
+                        <td style="padding: 12px; text-align: center; border: 1px solid #ddd;">${modulePercentage}%</td>
+                        <td style="padding: 12px; text-align: center; border: 1px solid #ddd;">${badge}</td>
+                    </tr>
+                `;
+            }
+            
+            summaryHTML += `
+                    <tr style="background: #e6f2ff; font-weight: bold;">
+                        <td style="padding: 15px; border: 1px solid #ddd;"><strong>TOTALE</strong></td>
+                        <td style="padding: 15px; text-align: center; border: 1px solid #ddd;"><strong>${totalScore} / 20</strong></td>
+                        <td style="padding: 15px; text-align: center; border: 1px solid #ddd;"><strong>${percentage}%</strong></td>
+                        <td style="padding: 15px; text-align: center; border: 1px solid #ddd;"><strong>${percentage >= 80 ? '🌟' : percentage >= 60 ? '✓' : '⚠'}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="success-box" style="margin-top: 30px;">
+                <h3>📈 Prossimi Passi</h3>
+                <ul style="text-align: left; margin: 15px 0;">
+                    <li>Rivedi i moduli dove hai ottenuto meno di 3/5</li>
+                    <li>Pratica con le esercitazioni fornite nel corso</li>
+                    <li>Consulta i manuali tecnici per approfondire</li>
+                    <li>Applica le conoscenze acquisite nei tuoi progetti reali</li>
+                    <li>Continua ad aggiornarti sulle linee guida WCAG</li>
+                </ul>
+            </div>
+            `;
+            
+            if (totalScore === 25) {
+                summaryHTML += `
+                    <div style="margin-top: 30px; padding: 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 15px; text-align: center;">
+                        <div class="trophy">🏆</div>
+                        <h2 style="color: white; margin: 20px 0;">FORNITORE CERTIFICATO ACCESSIBILITÀ WEB</h2>
+                        <p style="font-size: 1.3em;">Hai completato il corso con il punteggio massimo!</p>
+                        <p style="font-size: 1.1em; margin-top: 20px;">Sei ufficialmente un <strong>Fornitore Esperto di Accessibilità Web per PA</strong></p>
+                        <p style="margin-top: 20px; font-size: 0.9em;">Padronanza completa: WCAG 2.1 AA + Verifica Soggettiva + CI/CD</p>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = summaryHTML;
+        }
+
+        // Navigazione con tastiera
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                previousSlide();
+            } else if (e.key === 'Home') {
+                showSlide(0);
+            } else if (e.key === 'End') {
+                showSlide(totalSlides - 1);
+            }
+        });
+
+        // Inizializzazione
+        updateSlideNumber();
+        
+        // Previeni il submit del form con Enter
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+            });
+        });
+    </script>
+</body>
+</html>

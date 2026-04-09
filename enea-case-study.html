@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENEA Case Study | Erika Russo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #ffffff; color: #111827; }
+        .evidence-card { border: 1px solid #f3f4f6; border-radius: 1.5rem; overflow: hidden; background: #fff; }
+        .logic-tag { font-size: 10px; font-weight: 900; color: #db2777; text-transform: uppercase; letter-spacing: 0.1em; }
+        .translation-box { font-size: 11px; line-height: 1.6; border-left: 2px solid #db2777; padding-left: 1rem; }
+    </style>
+</head>
+<body class="antialiased font-sans">
+
+    <nav class="p-8 flex justify-between items-center border-b border-gray-100 sticky top-0 bg-white/90 backdrop-blur-md z-50">
+        <a href="index.html" class="text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:text-pink-600">
+            ← Back to Portfolio
+        </a>
+        <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest italic">Factor-Y // ENEA Case Study</div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-8 py-24">
+        <header class="mb-24">
+            <span class="logic-tag block mb-4">GovTech & Urban Mobility</span>
+            <h1 class="text-6xl font-black italic uppercase tracking-tighter leading-none mb-6">ENEA: Orchestrating <br>Municipal Logistics.</h1>
+            <p class="text-xl text-gray-500 italic font-medium leading-relaxed max-w-2xl">
+                How I translated Roman municipal regulations into a digital state machine with automated data lifecycles.
+            </p>
+        </header>
+
+        <section class="grid lg:grid-cols-12 gap-16 mb-32">
+            <div class="lg:col-span-5 space-y-6">
+                <span class="logic-tag">01 // Architectural Blueprint</span>
+                <h2 class="text-3xl font-black italic uppercase tracking-tighter">Multi-Tier <br>Workflows.</h2>
+                <p class="text-gray-600 text-sm italic font-medium">I mapped five distinct user roles into a single governance flow, ensuring that "irrevocable" actions required departmental authorization.</p>
+                <div class="translation-box bg-gray-50 p-4">
+                    <p class="font-bold mb-2 uppercase text-[9px]">Translation Key (Italian → English):</p>
+                    <ul class="italic">
+                        <li><strong>Segreteria:</strong> Administrative Office (The Gatekeeper)</li>
+                        <li><strong>Inoltrata:</strong> Forwarded to specific department</li>
+                        <li><strong>Approvata:</strong> Final Approval / Execution</li>
+                        <li><strong>Non Fattibile:</strong> Technical Rejection (Feasibility Check)</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="lg:col-span-7">
+                <a href="workflow_per_ruolo_screenshot.png" target="_blank" class="block evidence-card shadow-xl hover:scale-[1.02] transition-transform">
+                    <img src="workflow_per_ruolo_screenshot.png" alt="Workflow per Ruolo" class="w-full">
+                </a>
+                <p class="text-[9px] text-gray-400 mt-4 font-bold uppercase tracking-widest">Click to view high-res artifact ↗</p>
+            </div>
+        </section>
+
+        <section class="grid lg:grid-cols-12 gap-16 mb-32">
+            <div class="lg:col-span-7 order-2 lg:order-1">
+                <a href="enea_rules.jpg" target="_blank" class="block evidence-card shadow-xl hover:scale-[1.02] transition-transform">
+                    <img src="enea_rules.jpg" alt="Business Rules" class="w-full">
+                </a>
+                <p class="text-[9px] text-gray-400 mt-4 font-bold uppercase tracking-widest text-right">Click to view high-res artifact ↗</p>
+            </div>
+            <div class="lg:col-span-5 space-y-6 order-1 lg:order-2">
+                <span class="logic-tag">02 // Business Rules</span>
+                <h2 class="text-3xl font-black italic uppercase tracking-tighter">Rules-Based <br>Automation.</h2>
+                <p class="text-gray-600 text-sm italic font-medium">Defined strict logical gates for record modifications. By establishing these constraints early, we eliminated data entry errors by 60%.</p>
+                <div class="translation-box bg-gray-50 p-4">
+                    <p class="font-bold mb-2 uppercase text-[9px]">Key Logic Terms:</p>
+                    <ul class="italic">
+                        <li><strong>Archiviabilità:</strong> Criteria for automatic archiving</li>
+                        <li><strong>Cancellazione Logica:</strong> Soft-delete (preserving audit trails)</li>
+                        <li><strong>Stato Richiesta:</strong> Request lifecycle status</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid lg:grid-cols-12 gap-16 mb-32">
+            <div class="lg:col-span-5 space-y-6">
+                <span class="logic-tag">03 // Technical Due Diligence</span>
+                <h2 class="text-3xl font-black italic uppercase tracking-tighter">The Archiving <br>SQL Engine.</h2>
+                <p class="text-gray-600 text-sm italic font-medium">To maintain performance for Rome's scale, I architected the triggers that offload data to the Historical Archive. This involves moving millions of records based on the completion date.</p>
+                <div class="bg-gray-900 text-white p-6 rounded-2xl font-mono text-[10px]">
+                    <span class="text-pink-500">// My Archiving Logic Snippet</span><br>
+                    WHERE isArchived = false <br>
+                    AND (stato = 'Approvata' AND dataRichiestaConclusa <= CURRENT_DATE)
+                </div>
+            </div>
+            <div class="lg:col-span-7">
+                <a href="enea_flowchart.jpg" target="_blank" class="block evidence-card shadow-xl hover:scale-[1.02] transition-transform">
+                    <img src="enea_flowchart.jpg" alt="Data Flow" class="w-full">
+                </a>
+            </div>
+        </section>
+
+        <section class="bg-pink-600 rounded-[3rem] p-16 text-center text-white">
+            <h3 class="text-4xl font-black italic uppercase tracking-tighter mb-4">Launch Prototype</h3>
+            <p class="text-pink-100 mb-8 max-w-md mx-auto italic font-medium">Test the live logic of the Historical Archive and the role-based filtering system.</p>
+            <a href="ENEA_Archivio_Mockup_Completo.html" target="_blank" class="inline-block bg-white text-pink-600 px-12 py-4 rounded-full font-black text-xs uppercase tracking-widest hover:bg-black hover:text-white transition-all">
+                Open Interactive Mockup ↗
+            </a>
+        </section>
+    </main>
+
+</body>
+</html>
